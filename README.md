@@ -1,3 +1,4 @@
+[README.md](https://github.com/user-attachments/files/30168394/README.md)
 # 💰 InvestTrack
 
 Track stocks, mutual funds, savings & daily expenses — synced to Google Sheets for free.
