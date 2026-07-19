@@ -2,1240 +2,772 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>InvestTrack</title>
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0a0a1a">
+<meta name="theme-color" content="#000000">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-
 :root {
-  --bg: #06060f;
-  --surface: rgba(255,255,255,0.03);
-  --surface-2: rgba(255,255,255,0.06);
-  --surface-3: rgba(255,255,255,0.09);
-  --glass: rgba(15,15,30,0.8);
-  --border: rgba(255,255,255,0.08);
-  --border-light: rgba(255,255,255,0.12);
-  --text: #f0f0f8;
-  --text-2: #a0a0b8;
-  --text-3: #606078;
-  --accent: #7c5cfc;
-  --accent-2: #a78bfa;
-  --accent-glow: rgba(124,92,252,0.3);
-  --green: #34d399;
-  --green-bg: rgba(52,211,153,0.12);
-  --red: #f87171;
-  --red-bg: rgba(248,113,113,0.12);
-  --yellow: #fbbf24;
-  --blue: #60a5fa;
-  --pink: #f472b6;
-  --radius: 20px;
-  --radius-sm: 14px;
-  --radius-xs: 10px;
+  --bg: #000000;
+  --bg2: #0a0a0a;
+  --card: #1c1c1e;
+  --card2: #2c2c2e;
+  --card3: #3a3a3c;
+  --sep: rgba(84,84,88,0.35);
+  --text: #ffffff;
+  --text2: #ebebf599;
+  --text3: #ebebf54d;
+  --blue: #0a84ff;
+  --green: #30d158;
+  --red: #ff453a;
+  --orange: #ff9f0a;
+  --purple: #bf5af2;
+  --pink: #ff375f;
+  --teal: #64d2ff;
+  --yellow: #ffd60a;
+  --fill: rgba(120,120,128,0.12);
+  --fill2: rgba(120,120,128,0.24);
+  --safe-top: env(safe-area-inset-top, 20px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --tab-height: 83px;
 }
 
-* { margin:0; padding:0; box-sizing:border-box; }
-
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html { height:100%; }
 body {
-  font-family: 'Inter', -apple-system, sans-serif;
+  font-family: -apple-system, 'SF Pro Display', 'Inter', 'Helvetica Neue', sans-serif;
   background: var(--bg);
   color: var(--text);
-  min-height: 100vh;
-  min-height: 100dvh;
-  padding-bottom: 90px;
+  min-height: 100%;
+  padding-top: var(--safe-top);
+  padding-bottom: calc(var(--tab-height) + var(--safe-bottom));
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+  overscroll-behavior: none;
 }
 
-/* Background gradient orbs */
-body::before, body::after {
-  content: '';
-  position: fixed;
-  width: 400px;
-  height: 400px;
-  border-radius: 50%;
-  filter: blur(120px);
-  opacity: 0.15;
-  pointer-events: none;
-  z-index: 0;
-}
-body::before { background: #7c5cfc; top: -100px; right: -100px; }
-body::after { background: #f472b6; bottom: 100px; left: -150px; }
+::-webkit-scrollbar { display: none; }
 
-/* Scrollbar */
-::-webkit-scrollbar { width: 0; height: 0; }
-
-/* ===== HEADER ===== */
-.header {
+/* ===== iOS-STYLE NAV BAR ===== */
+.navbar {
   position: sticky;
   top: 0;
   z-index: 100;
-  padding: 16px 20px 12px;
-  background: rgba(6,6,15,0.85);
+  background: rgba(0,0,0,0.72);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border-bottom: 1px solid var(--border);
+  padding: 8px 16px 10px;
+  border-bottom: 0.5px solid var(--sep);
 }
-.header-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.logo-icon {
-  width: 36px;
-  height: 36px;
-  background: linear-gradient(135deg, var(--accent), #f472b6);
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-}
-.logo-text {
-  font-size: 18px;
-  font-weight: 800;
-  letter-spacing: -0.5px;
-  background: linear-gradient(135deg, #fff, #a0a0b8);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-.header-actions {
-  display: flex;
-  gap: 8px;
-}
-.header-btn {
-  width: 36px;
-  height: 36px;
-  border-radius: 12px;
-  background: var(--surface-2);
-  border: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  color: var(--text-2);
-  font-size: 16px;
-  transition: all 0.2s;
-}
-.header-btn:active { transform: scale(0.92); }
-
-/* Sync indicator */
-.sync-indicator {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 8px;
-  font-size: 11px;
-  color: var(--text-3);
-}
-.sync-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--green);
-  animation: pulse 2s infinite;
-}
-.sync-dot.offline { background: var(--yellow); animation: none; }
-@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
-
-/* ===== SUMMARY CARDS ===== */
-.summary-row {
-  display: flex;
-  gap: 10px;
-  padding: 16px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-.summary-card {
-  min-width: 155px;
-  padding: 16px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  backdrop-filter: blur(10px);
-  position: relative;
-  overflow: hidden;
-  flex-shrink: 0;
-}
-.summary-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--accent), transparent);
-  opacity: 0.5;
-}
-.summary-label {
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--text-3);
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-}
-.summary-value {
-  font-size: 22px;
-  font-weight: 800;
-  margin-top: 6px;
-  letter-spacing: -0.5px;
-}
-.summary-sub {
-  font-size: 11px;
-  margin-top: 4px;
-  font-weight: 500;
-}
-
-/* ===== PAGES ===== */
-.page { display:none; padding: 0 16px 16px; position: relative; z-index: 1; }
-.page.active { display: block; animation: fadeIn 0.3s ease; }
-@keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
-
-.section-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 24px 0 14px;
-}
-.section-title {
-  font-size: 18px;
+.navbar-large-title {
+  font-size: 34px;
   font-weight: 700;
-  letter-spacing: -0.3px;
+  letter-spacing: 0.37px;
+  line-height: 1.15;
 }
-.add-btn {
-  width: 40px;
-  height: 40px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, var(--accent), #9b6dfc);
+.navbar-inline {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+}
+.navbar-inline .title { font-size: 17px; font-weight: 600; }
+.navbar-btn {
+  font-size: 17px;
+  color: var(--blue);
+  background: none;
   border: none;
-  color: white;
-  font-size: 22px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   cursor: pointer;
-  box-shadow: 0 4px 16px var(--accent-glow);
-  transition: all 0.2s;
-}
-.add-btn:active { transform: scale(0.9); }
-
-/* ===== ITEM CARDS ===== */
-.card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 16px;
-  margin-bottom: 10px;
-  backdrop-filter: blur(10px);
-  position: relative;
-  transition: all 0.2s;
-}
-.card:active { background: var(--surface-2); transform: scale(0.99); }
-.card-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-}
-.card-name {
-  font-size: 15px;
-  font-weight: 700;
-  letter-spacing: -0.2px;
-  max-width: 70%;
-}
-.card-sub {
-  font-size: 12px;
-  color: var(--text-3);
-  margin-top: 3px;
   font-weight: 400;
-}
-.card-bottom {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-top: 14px;
-}
-.card-amount {
-  font-size: 18px;
-  font-weight: 800;
-  letter-spacing: -0.3px;
-}
-.badge {
-  font-size: 11px;
-  font-weight: 600;
-  padding: 4px 10px;
-  border-radius: 20px;
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-}
-.badge.green { background: var(--green-bg); color: var(--green); }
-.badge.red { background: var(--red-bg); color: var(--red); }
-
-.card-actions {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  display: flex;
-  gap: 4px;
-  opacity: 0;
-  transition: opacity 0.2s;
-}
-.card:hover .card-actions { opacity: 1; }
-@media (hover: none) { .card-actions { opacity: 1; } }
-.card-action-btn {
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
-  background: var(--surface-2);
-  border: none;
-  color: var(--text-3);
-  font-size: 13px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.card-action-btn:active { background: var(--surface-3); }
-
-.card-meta {
-  font-size: 11px;
-  color: var(--text-3);
-  margin-top: 6px;
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-.card-meta span {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
+  padding: 8px 0;
+  font-family: inherit;
 }
 
-/* Expense card */
-.expense-card {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 14px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  margin-bottom: 8px;
-}
-.expense-icon {
-  width: 42px;
-  height: 42px;
-  border-radius: 14px;
-  background: var(--surface-2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  flex-shrink: 0;
-}
-.expense-info { flex:1; min-width:0; }
-.expense-info .name { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.expense-info .meta { font-size: 11px; color: var(--text-3); margin-top: 2px; }
-.expense-amount { font-size: 15px; font-weight: 700; color: var(--red); white-space: nowrap; }
-.expense-actions {
-  display: flex;
-  gap: 4px;
-}
-
-/* Date group */
-.date-header {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text-3);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin: 20px 0 10px;
-  display: flex;
-  justify-content: space-between;
-}
-.date-total { color: var(--text-2); font-weight: 700; }
-
-/* ===== BOTTOM NAV ===== */
-.bottom-nav {
+/* ===== TAB BAR (iOS style) ===== */
+.tabbar {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
   z-index: 200;
-  background: rgba(6,6,15,0.9);
+  background: rgba(22,22,23,0.85);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border-top: 1px solid var(--border);
+  border-top: 0.5px solid var(--sep);
   display: flex;
-  padding: 6px 8px;
-  padding-bottom: max(6px, env(safe-area-inset-bottom));
+  padding-bottom: var(--safe-bottom);
 }
-.nav-btn {
+.tab-item {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 3px;
-  padding: 8px 4px;
-  border-radius: 14px;
+  gap: 2px;
+  padding: 7px 0 6px;
   cursor: pointer;
-  transition: all 0.2s;
-  color: var(--text-3);
+  color: var(--text3);
   font-size: 10px;
   font-weight: 500;
-  -webkit-tap-highlight-color: transparent;
-  position: relative;
+  transition: color 0.15s;
 }
-.nav-btn.active {
-  color: var(--accent-2);
-}
-.nav-btn.active::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 20px;
-  height: 2px;
-  background: var(--accent);
-  border-radius: 2px;
-}
-.nav-btn svg { width: 22px; height: 22px; }
+.tab-item.active { color: var(--blue); }
+.tab-item svg { width: 24px; height: 24px; }
 
-/* ===== SUB TABS ===== */
-.tabs {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 14px;
-  overflow-x: auto;
-  padding: 2px 0;
+/* ===== PAGES ===== */
+.page { display:none; }
+.page.active { display:block; animation: pageIn 0.2s ease; }
+@keyframes pageIn { from{opacity:0} to{opacity:1} }
+
+/* ===== GROUPED LIST (iOS Settings style) ===== */
+.group {
+  margin: 20px 16px;
 }
-.tab {
-  padding: 8px 18px;
-  border-radius: 12px;
+.group-header {
   font-size: 13px;
-  font-weight: 600;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  color: var(--text-3);
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all 0.2s;
+  font-weight: 400;
+  color: var(--text2);
+  text-transform: uppercase;
+  letter-spacing: -0.08px;
+  padding: 0 16px 6px;
 }
-.tab.active {
-  background: var(--accent);
-  color: white;
-  border-color: var(--accent);
-  box-shadow: 0 4px 12px var(--accent-glow);
+.group-footer {
+  font-size: 13px;
+  color: var(--text3);
+  padding: 6px 16px 0;
 }
-
-/* ===== CHART CONTAINERS ===== */
-.chart-box {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 18px;
-  margin-bottom: 14px;
-  backdrop-filter: blur(10px);
-}
-.chart-box h3 {
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 14px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-/* Allocation bars */
-.alloc-item {
-  margin-bottom: 14px;
-}
-.alloc-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 6px;
-}
-.alloc-label { font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 8px; }
-.alloc-dot { width: 8px; height: 8px; border-radius: 4px; }
-.alloc-val { font-size: 13px; font-weight: 700; }
-.alloc-bar {
-  height: 6px;
-  border-radius: 3px;
-  background: var(--surface-2);
+.list {
+  background: var(--card);
+  border-radius: 10px;
   overflow: hidden;
 }
-.alloc-fill {
-  height: 100%;
-  border-radius: 3px;
-  transition: width 0.8s cubic-bezier(0.4,0,0.2,1);
+.list-item {
+  display: flex;
+  align-items: center;
+  padding: 11px 16px;
+  gap: 12px;
+  position: relative;
+  min-height: 44px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.list-item:active { background: var(--fill); }
+.list-item + .list-item { border-top: 0.5px solid var(--sep); }
+.list-item-content { flex:1; min-width:0; }
+.list-item-title { font-size: 17px; line-height: 22px; }
+.list-item-sub { font-size: 13px; color: var(--text2); margin-top: 1px; }
+.list-item-value { font-size: 17px; color: var(--text2); text-align: right; }
+.list-item-arrow { color: var(--text3); font-size: 14px; flex-shrink:0; }
+.list-item-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+  color: white;
 }
 
-/* ===== MODAL (Bottom Sheet) ===== */
-.modal-bg {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.5);
-  z-index: 500;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+/* ===== PORTFOLIO CARDS ===== */
+.portfolio-header {
+  text-align: center;
+  padding: 24px 16px 16px;
 }
-.modal-bg.show { display: flex; align-items: flex-end; justify-content: center; }
-
-.sheet {
-  background: #12121f;
-  border-radius: 28px 28px 0 0;
-  padding: 10px 20px 30px;
-  width: 100%;
-  max-width: 500px;
-  max-height: 88vh;
-  overflow-y: auto;
-  animation: slideUp 0.35s cubic-bezier(0.32,0.72,0,1);
-  border-top: 1px solid var(--border-light);
-}
-@keyframes slideUp { from { transform:translateY(100%); } to { transform:translateY(0); } }
-
-.sheet-handle {
-  width: 36px;
-  height: 4px;
-  background: var(--surface-3);
-  border-radius: 2px;
-  margin: 0 auto 16px;
-}
-.sheet h3 {
-  font-size: 20px;
+.portfolio-total {
+  font-size: 42px;
   font-weight: 700;
-  margin-bottom: 20px;
-  letter-spacing: -0.3px;
+  letter-spacing: -1px;
+  line-height: 1.1;
 }
-
-/* Form */
-.field { margin-bottom: 16px; }
-.field label {
-  display: block;
-  font-size: 12px;
+.portfolio-change {
+  font-size: 17px;
   font-weight: 600;
-  color: var(--text-3);
-  margin-bottom: 8px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  margin-top: 4px;
 }
-.field input, .field select {
-  width: 100%;
-  padding: 14px 16px;
-  background: var(--surface-2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  color: var(--text);
-  font-size: 15px;
-  font-family: 'Inter', sans-serif;
-  font-weight: 500;
-  outline: none;
-  transition: all 0.2s;
+.portfolio-subtitle {
+  font-size: 13px;
+  color: var(--text2);
+  margin-top: 2px;
 }
-.field input:focus, .field select:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-glow);
-}
-.field input::placeholder { color: var(--text-3); }
-.field select option { background: #12121f; }
 
-.fetch-btn {
-  background: var(--surface-2);
-  border: 1px solid var(--border);
-  color: var(--accent-2);
-  padding: 10px 14px;
-  border-radius: var(--radius-xs);
+/* Horizontal scroll cards */
+.h-scroll {
+  display: flex;
+  gap: 10px;
+  padding: 0 16px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+}
+.h-card {
+  min-width: 160px;
+  background: var(--card);
+  border-radius: 14px;
+  padding: 14px;
+  scroll-snap-align: start;
+  flex-shrink: 0;
+}
+.h-card-label { font-size: 13px; color: var(--text2); font-weight: 500; }
+.h-card-value { font-size: 22px; font-weight: 700; margin-top: 4px; letter-spacing: -0.5px; }
+.h-card-sub { font-size: 13px; margin-top: 3px; font-weight: 600; }
+
+/* ===== STOCK/FUND CARDS ===== */
+.inv-card {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin: 0 16px 8px;
+  position: relative;
+}
+.inv-card:active { background: var(--card2); }
+.inv-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.inv-card-name { font-size: 17px; font-weight: 600; line-height: 22px; }
+.inv-card-sub { font-size: 13px; color: var(--text2); margin-top: 1px; }
+.inv-card-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 10px;
+}
+.inv-card-price { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
+.inv-card-pl {
   font-size: 13px;
   font-weight: 600;
-  cursor: pointer;
-  margin-top: 8px;
-  transition: all 0.2s;
-  font-family: 'Inter', sans-serif;
+  padding: 3px 8px;
+  border-radius: 6px;
 }
-.fetch-btn:active { transform: scale(0.97); }
-.fetch-result {
-  font-size: 12px;
-  margin-top: 6px;
-  padding: 8px 12px;
-  border-radius: var(--radius-xs);
-  background: var(--surface);
-  display: none;
-}
-.fetch-result.show { display: block; }
-
-.submit-btn {
-  width: 100%;
-  padding: 16px;
-  background: linear-gradient(135deg, var(--accent), #9b6dfc);
-  color: white;
-  border: none;
-  border-radius: var(--radius-sm);
-  font-size: 16px;
-  font-weight: 700;
-  font-family: 'Inter', sans-serif;
-  cursor: pointer;
-  margin-top: 8px;
-  box-shadow: 0 4px 16px var(--accent-glow);
-  transition: all 0.2s;
-}
-.submit-btn:active { transform: scale(0.98); opacity: 0.9; }
-
-.cancel-btn {
-  width: 100%;
-  padding: 14px;
-  background: none;
-  border: 1px solid var(--border);
-  color: var(--text-2);
-  border-radius: var(--radius-sm);
-  font-size: 14px;
-  font-weight: 600;
-  font-family: 'Inter', sans-serif;
-  cursor: pointer;
-  margin-top: 8px;
-}
-
-/* Category grid */
-.cat-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-}
-.cat-btn {
+.inv-card-meta {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  padding: 12px 4px;
-  border-radius: var(--radius-sm);
-  background: var(--surface);
-  border: 2px solid transparent;
-  cursor: pointer;
-  transition: all 0.2s;
-  color: var(--text-3);
-  font-size: 10px;
-  font-weight: 500;
-}
-.cat-btn.selected {
-  border-color: var(--accent);
-  background: rgba(124,92,252,0.1);
-  color: var(--accent-2);
-}
-.cat-btn .icon { font-size: 22px; }
-
-/* ===== SETTINGS ===== */
-.settings-group {
-  margin-bottom: 20px;
-}
-.settings-group-title {
+  gap: 12px;
+  margin-top: 8px;
   font-size: 12px;
-  font-weight: 600;
-  color: var(--text-3);
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  margin-bottom: 10px;
-  padding-left: 4px;
+  color: var(--text3);
 }
-.setting-row {
+
+/* ===== EXPENSE CARD ===== */
+.exp-row {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 16px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  margin-bottom: 8px;
+  gap: 12px;
+  padding: 10px 16px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: background 0.15s;
 }
-.setting-row:active { background: var(--surface-2); }
-.setting-icon {
-  width: 38px;
-  height: 38px;
-  border-radius: 12px;
+.exp-row:active { background: var(--fill); }
+.exp-row + .exp-row { border-top: 0.5px solid var(--sep); }
+.exp-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 18px;
   flex-shrink: 0;
 }
-.setting-info { flex: 1; }
-.setting-info .title { font-size: 14px; font-weight: 600; }
-.setting-info .desc { font-size: 12px; color: var(--text-3); margin-top: 2px; }
-.setting-arrow { color: var(--text-3); font-size: 14px; }
+.exp-info { flex:1; min-width:0; }
+.exp-name { font-size: 15px; font-weight: 400; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.exp-meta { font-size: 12px; color: var(--text3); }
+.exp-amount { font-size: 15px; font-weight: 500; color: var(--text); text-align:right; }
 
-/* Toggle switch */
-.toggle-switch {
-  width: 48px;
-  height: 28px;
-  background: var(--surface-3);
-  border-radius: 14px;
-  position: relative;
-  cursor: pointer;
-  transition: background 0.2s;
-  flex-shrink: 0;
+/* ===== SECTION HEADER ===== */
+.sec-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px 8px;
+  margin-top: 16px;
 }
-.toggle-switch.on { background: var(--accent); }
-.toggle-switch::after {
-  content: '';
-  width: 22px;
-  height: 22px;
-  background: white;
+.sec-title { font-size: 22px; font-weight: 700; letter-spacing: 0.35px; }
+.sec-btn {
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  position: absolute;
-  top: 3px;
-  left: 3px;
-  transition: transform 0.2s;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  background: var(--blue);
+  border: none;
+  color: white;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(10,132,255,0.3);
 }
-.toggle-switch.on::after { transform: translateX(20px); }
+
+/* ===== CHART ===== */
+.chart-wrap {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 16px;
+  margin: 0 16px 8px;
+}
+.chart-wrap h3 { font-size: 15px; font-weight: 600; margin-bottom: 12px; }
+
+/* Allocation bar */
+.alloc-row { margin-bottom: 12px; }
+.alloc-top { display:flex; justify-content:space-between; font-size:13px; margin-bottom:4px; }
+.alloc-bar { height:6px; border-radius:3px; background:var(--fill); overflow:hidden; }
+.alloc-fill { height:100%; border-radius:3px; transition:width 0.6s ease; }
+
+/* ===== MODAL (iOS Sheet) ===== */
+.modal-bg {
+  display:none; position:fixed; inset:0; z-index:500;
+  background:rgba(0,0,0,0.4);
+  backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px);
+}
+.modal-bg.show { display:flex; align-items:flex-end; justify-content:center; }
+.modal-sheet {
+  background:var(--card);
+  border-radius:14px 14px 0 0;
+  width:100%; max-width:500px;
+  max-height:90vh; overflow-y:auto;
+  animation: sheetUp 0.35s cubic-bezier(0.32,0.72,0,1);
+  padding-bottom: var(--safe-bottom);
+}
+@keyframes sheetUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
+.modal-handle { width:36px;height:5px;background:var(--fill2);border-radius:3px;margin:8px auto 0; }
+.modal-header {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:12px 16px; border-bottom:0.5px solid var(--sep);
+  position:sticky; top:0; background:var(--card); z-index:10;
+}
+.modal-header h3 { font-size:17px; font-weight:600; }
+.modal-cancel { color:var(--blue); background:none; border:none; font-size:17px; cursor:pointer; font-family:inherit; }
+.modal-save { color:var(--blue); background:none; border:none; font-size:17px; font-weight:600; cursor:pointer; font-family:inherit; }
+
+/* Form fields iOS style */
+.field { padding: 0 16px; margin-bottom: 0; }
+.field-inner {
+  background: var(--card2);
+  border-radius: 10px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+.field-row {
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  min-height: 44px;
+}
+.field-row + .field-row { border-top: 0.5px solid var(--sep); }
+.field-label {
+  font-size: 13px;
+  color: var(--text2);
+  min-width: 80px;
+  padding: 11px 0;
+}
+.field-input {
+  flex: 1;
+  background: none;
+  border: none;
+  color: var(--text);
+  font-size: 17px;
+  padding: 11px 0;
+  text-align: right;
+  outline: none;
+  font-family: inherit;
+}
+.field-input::placeholder { color: var(--text3); }
+.field-input:-webkit-autofill { display:none; }
+select.field-input { -webkit-appearance: none; appearance: none; }
+
+/* Fetch button */
+.fetch-live {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px;
+  margin: 10px 16px;
+  background: var(--fill);
+  border: 1px solid var(--sep);
+  border-radius: 10px;
+  color: var(--blue);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+.fetch-live:active { transform: scale(0.97); background: var(--fill2); }
+.fetch-live .spin { animation: spin 0.8s linear infinite; display:none; }
+.fetch-live.loading .spin { display:inline-block; }
+.fetch-live.loading .icon { display:none; }
+@keyframes spin { to{transform:rotate(360deg)} }
+
+.fetch-status {
+  margin: 0 16px 8px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  display: none;
+}
+.fetch-status.show { display:block; }
+.fetch-status.ok { background: rgba(48,209,88,0.12); color:var(--green); }
+.fetch-status.err { background: rgba(255,69,58,0.12); color:var(--red); }
+
+/* ===== CATEGORIES ===== */
+.cat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  padding: 8px 16px;
+}
+.cat-btn {
+  display:flex; flex-direction:column; align-items:center; gap:4px;
+  padding:10px 4px; border-radius:12px;
+  background:var(--fill); border:2px solid transparent;
+  cursor:pointer; font-size:10px; color:var(--text2);
+  transition: all 0.15s;
+}
+.cat-btn.sel { border-color:var(--blue); background:rgba(10,132,255,0.15); color:var(--blue); }
+.cat-btn .ci { font-size:24px; }
+
+/* ===== SAVE BUTTON (iOS full-width) ===== */
+.save-btn {
+  display: block;
+  width: calc(100% - 32px);
+  margin: 16px auto;
+  padding: 14px;
+  background: var(--blue);
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+}
+.save-btn:active { opacity: 0.7; }
+
+/* ===== SEGMENTED CONTROL ===== */
+.seg-ctrl {
+  display: flex;
+  background: var(--fill);
+  border-radius: 8px;
+  padding: 2px;
+  margin: 8px 16px;
+  gap: 0;
+}
+.seg-btn {
+  flex: 1;
+  padding: 7px 12px;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  color: var(--text);
+  transition: all 0.2s;
+  border: none;
+  background: none;
+  font-family: inherit;
+}
+.seg-btn.active {
+  background: var(--card3);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
 
 /* ===== TOAST ===== */
 .toast {
   position: fixed;
-  bottom: 100px;
+  top: calc(var(--safe-top) + 8px);
   left: 50%;
-  transform: translateX(-50%) translateY(80px);
-  background: #1e1e32;
+  transform: translateX(-50%) translateY(-80px);
+  background: var(--card3);
   color: var(--text);
-  padding: 12px 24px;
-  border-radius: 30px;
-  font-size: 13px;
+  padding: 12px 20px;
+  border-radius: 14px;
+  font-size: 15px;
   font-weight: 500;
-  border: 1px solid var(--border-light);
   z-index: 1000;
-  transition: all 0.3s cubic-bezier(0.32,0.72,0,1);
-  opacity: 0;
-  pointer-events: none;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.4);
-}
-.toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-
-/* Empty state */
-.empty {
-  text-align: center;
-  padding: 50px 20px;
-}
-.empty .icon { font-size: 56px; margin-bottom: 16px; opacity: 0.7; }
-.empty .title { font-size: 16px; font-weight: 600; color: var(--text-2); }
-.empty .desc { font-size: 13px; color: var(--text-3); margin-top: 6px; }
-
-/* Confirm dialog */
-.confirm-bg {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.6);
-  z-index: 600;
-  justify-content: center;
-  align-items: center;
-  backdrop-filter: blur(4px);
-}
-.confirm-bg.show { display: flex; }
-.confirm-box {
-  background: #12121f;
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius);
-  padding: 28px;
-  max-width: 320px;
-  width: 85%;
-  text-align: center;
-}
-.confirm-box .msg { font-size: 15px; font-weight: 500; margin-bottom: 24px; line-height: 1.5; }
-.confirm-btns { display: flex; gap: 10px; }
-.confirm-btns button {
-  flex: 1;
-  padding: 14px;
-  border-radius: var(--radius-sm);
-  border: none;
-  font-size: 14px;
-  font-weight: 700;
-  font-family: 'Inter', sans-serif;
-  cursor: pointer;
-}
-.btn-no { background: var(--surface-3); color: var(--text); }
-.btn-yes { background: var(--red); color: white; }
-
-/* Spinner */
-.spinner {
-  width: 16px; height: 16px;
-  border: 2px solid var(--surface-3);
-  border-top-color: var(--accent);
-  border-radius: 50%;
-  animation: spin 0.6s linear infinite;
-  display: inline-block;
-  vertical-align: middle;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* Google sheets setup panel */
-.gs-panel {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 18px;
-  margin-bottom: 14px;
-}
-.gs-panel h4 {
-  font-size: 14px;
-  font-weight: 700;
-  margin-bottom: 12px;
+  transition: transform 0.35s cubic-bezier(0.32,0.72,0,1);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.5);
   display: flex;
   align-items: center;
   gap: 8px;
 }
-.gs-steps {
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ===== SYNC BADGE ===== */
+.sync-badge {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 16px 8px;
   font-size: 12px;
-  color: var(--text-2);
-  line-height: 1.8;
+  color: var(--text3);
 }
-.gs-steps a { color: var(--accent-2); text-decoration: underline; }
-.gs-input-group {
-  display: flex;
-  gap: 8px;
-  margin-top: 12px;
+.sync-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--green);
 }
-.gs-input-group input {
-  flex: 1;
-  padding: 12px 14px;
-  background: var(--surface-2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-xs);
-  color: var(--text);
-  font-size: 13px;
-  font-family: 'Inter', sans-serif;
-  outline: none;
+.sync-dot.off { background: var(--orange); }
+.sync-dot.syncing { animation: pulse 1s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* ===== EMPTY STATE ===== */
+.empty-state {
+  text-align: center;
+  padding: 60px 30px;
 }
-.gs-input-group input:focus { border-color: var(--accent); }
-.gs-save-btn {
-  padding: 12px 18px;
-  background: var(--accent);
-  color: white;
-  border: none;
-  border-radius: var(--radius-xs);
+.empty-state .emoji { font-size: 56px; margin-bottom: 16px; }
+.empty-state .title { font-size: 20px; font-weight: 600; }
+.empty-state .desc { font-size: 15px; color: var(--text2); margin-top: 6px; line-height: 1.4; }
+
+/* ===== CONFIRM ===== */
+.confirm-bg {
+  display:none; position:fixed; inset:0; z-index:600;
+  background:rgba(0,0,0,0.5);
+  justify-content:center; align-items:center;
+}
+.confirm-bg.show { display:flex; }
+.confirm-box {
+  background:var(--card); border-radius:14px;
+  width:270px; text-align:center; overflow:hidden;
+}
+.confirm-msg { padding:20px 16px 16px; font-size:13px; color:var(--text2); line-height:1.4; }
+.confirm-title { padding:20px 16px 4px; font-size:17px; font-weight:600; }
+.confirm-btns { display:flex; border-top:0.5px solid var(--sep); }
+.confirm-btns button {
+  flex:1; padding:12px; background:none; border:none;
+  font-size:17px; cursor:pointer; font-family:inherit; color:var(--blue);
+}
+.confirm-btns button:first-child { border-right:0.5px solid var(--sep); }
+.confirm-btns .danger { color:var(--red); }
+
+/* Date header */
+.date-hdr {
   font-size: 13px;
   font-weight: 600;
-  cursor: pointer;
-  font-family: 'Inter', sans-serif;
-  white-space: nowrap;
+  color: var(--text2);
+  padding: 16px 16px 4px;
+  display: flex;
+  justify-content: space-between;
 }
-.gs-status {
-  margin-top: 10px;
-  padding: 10px 14px;
-  border-radius: var(--radius-xs);
+
+/* Pull to refresh indicator */
+.ptr-indicator {
+  text-align: center;
+  padding: 8px;
   font-size: 12px;
-  font-weight: 500;
+  color: var(--text3);
   display: none;
 }
-.gs-status.show { display: block; }
-.gs-status.success { background: var(--green-bg); color: var(--green); }
-.gs-status.error { background: var(--red-bg); color: var(--red); }
-.gs-status.info { background: rgba(96,165,250,0.12); color: var(--blue); }
-
-/* Responsive */
-@media (min-width: 768px) {
-  .page { max-width: 600px; margin: 0 auto; }
-  .sheet { border-radius: 28px; margin-bottom: 20px; }
-}
+.ptr-indicator.show { display:block; }
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
-<div class="header">
-  <div class="header-top">
-    <div class="logo">
-      <div class="logo-icon">📊</div>
-      <div class="logo-text">InvestTrack</div>
-    </div>
-    <div class="header-actions">
-      <div class="header-btn" onclick="switchPage('settings', this)" title="Settings">⚙️</div>
-    </div>
-  </div>
-  <div class="sync-indicator">
-    <div class="sync-dot offline" id="syncDot"></div>
-    <span id="syncText">Local Storage</span>
-  </div>
+<!-- NAV BAR -->
+<div class="navbar" id="navbar">
+  <div class="navbar-large-title" id="navTitle">Dashboard</div>
 </div>
 
-<!-- SUMMARY -->
-<div class="summary-row" id="summaryRow">
-  <div class="summary-card">
-    <div class="summary-label">Net Worth</div>
-    <div class="summary-value" id="sNetWorth">₹0</div>
-    <div class="summary-sub" id="sNetWorthSub" style="color:var(--text-3)">--</div>
-  </div>
-  <div class="summary-card">
-    <div class="summary-label">Stocks</div>
-    <div class="summary-value" id="sStocks">₹0</div>
-    <div class="summary-sub" id="sStocksPL">--</div>
-  </div>
-  <div class="summary-card">
-    <div class="summary-label">Mutual Funds</div>
-    <div class="summary-value" id="sMF">₹0</div>
-    <div class="summary-sub" id="sMFPL">--</div>
-  </div>
-  <div class="summary-card">
-    <div class="summary-label">Savings</div>
-    <div class="summary-value" id="sSavings">₹0</div>
-    <div class="summary-sub" id="sSavingsSub">--</div>
-  </div>
-  <div class="summary-card">
-    <div class="summary-label">This Month</div>
-    <div class="summary-value" id="sMonthExp" style="color:var(--red)">₹0</div>
-    <div class="summary-sub" id="sBudgetSub">--</div>
-  </div>
+<!-- SYNC BADGE -->
+<div class="sync-badge">
+  <div class="sync-dot off" id="syncDot"></div>
+  <span id="syncLabel">Local storage</span>
 </div>
 
 <!-- ===== DASHBOARD ===== -->
-<div class="page active" id="page-dashboard">
-  <div class="section-head"><div class="section-title">Dashboard</div></div>
+<div class="page active" id="pg-home">
+  <div class="portfolio-header">
+    <div class="portfolio-total" id="pNetWorth">₹0</div>
+    <div class="portfolio-change" id="pNetChange">--</div>
+    <div class="portfolio-subtitle" id="pNetSub">Total net worth</div>
+  </div>
 
-  <div class="chart-box">
-    <h3>📊 Asset Allocation</h3>
+  <div class="h-scroll" id="hCards">
+    <div class="h-card">
+      <div class="h-card-label">Stocks</div>
+      <div class="h-card-value" id="hStocks">₹0</div>
+      <div class="h-card-sub" id="hStocksPL" style="color:var(--text3)">--</div>
+    </div>
+    <div class="h-card">
+      <div class="h-card-label">Mutual Funds</div>
+      <div class="h-card-value" id="hMF">₹0</div>
+      <div class="h-card-sub" id="hMFPL" style="color:var(--text3)">--</div>
+    </div>
+    <div class="h-card">
+      <div class="h-card-label">Savings</div>
+      <div class="h-card-value" id="hSavings">₹0</div>
+      <div class="h-card-sub" id="hSavingsSub" style="color:var(--text3)">--</div>
+    </div>
+    <div class="h-card">
+      <div class="h-card-label">This Month</div>
+      <div class="h-card-value" id="hMonthExp" style="color:var(--red)">₹0</div>
+      <div class="h-card-sub" id="hBudgetSub" style="color:var(--text3)">--</div>
+    </div>
+  </div>
+
+  <div style="padding:16px 16px 4px;"><div style="font-size:22px;font-weight:700;">Allocation</div></div>
+  <div class="chart-wrap" id="allocWrap">
     <div id="allocBars"></div>
-    <canvas id="donutChart" height="220" style="display:none;width:100%;"></canvas>
   </div>
 
-  <div class="chart-box">
-    <h3>📈 Expense Trend</h3>
-    <canvas id="barChart" height="180" style="width:100%;"></canvas>
-  </div>
-
-  <div class="chart-box">
-    <h3>🔥 Recent Activity</h3>
-    <div id="recentActivity"></div>
+  <div style="padding:4px 16px 4px;"><div style="font-size:22px;font-weight:700;">Expenses</div></div>
+  <div class="chart-wrap">
+    <h3 style="font-size:13px;color:var(--text2);font-weight:500;margin-bottom:8px;">Monthly Trend</h3>
+    <canvas id="barChart" style="width:100%;height:150px;"></canvas>
   </div>
 </div>
 
 <!-- ===== STOCKS ===== -->
-<div class="page" id="page-stocks">
-  <div class="section-head">
-    <div class="section-title">Stocks</div>
-    <button class="add-btn" onclick="openStockModal()">+</button>
+<div class="page" id="pg-stocks">
+  <div class="sec-head">
+    <div class="sec-title">Stocks</div>
+    <button class="sec-btn" onclick="openStockModal()">+</button>
   </div>
-  <div class="tabs">
-    <div class="tab active" onclick="filterStocks('all',this)">All</div>
-    <div class="tab" onclick="filterStocks('gainer',this)">📈 Gainers</div>
-    <div class="tab" onclick="filterStocks('loser',this)">📉 Losers</div>
+  <div class="seg-ctrl" id="stockSeg">
+    <div class="seg-btn active" onclick="segFilter('stocks','all',this)">All</div>
+    <div class="seg-btn" onclick="segFilter('stocks','gainer',this)">Gainers</div>
+    <div class="seg-btn" onclick="segFilter('stocks','loser',this)">Losers</div>
   </div>
   <div id="stocksList"></div>
 </div>
 
 <!-- ===== MUTUAL FUNDS ===== -->
-<div class="page" id="page-mf">
-  <div class="section-head">
-    <div class="section-title">Mutual Funds</div>
-    <button class="add-btn" onclick="openMFModal()">+</button>
+<div class="page" id="pg-mf">
+  <div class="sec-head">
+    <div class="sec-title">Mutual Funds</div>
+    <button class="sec-btn" onclick="openMFModal()">+</button>
   </div>
   <div id="mfList"></div>
 </div>
 
 <!-- ===== SAVINGS ===== -->
-<div class="page" id="page-savings">
-  <div class="section-head">
-    <div class="section-title">Savings</div>
-    <button class="add-btn" onclick="openSavingsModal()">+</button>
+<div class="page" id="pg-savings">
+  <div class="sec-head">
+    <div class="sec-title">Savings</div>
+    <button class="sec-btn" onclick="openSavingsModal()">+</button>
   </div>
   <div id="savingsList"></div>
 </div>
 
 <!-- ===== EXPENSES ===== -->
-<div class="page" id="page-expenses">
-  <div class="section-head">
-    <div class="section-title">Expenses</div>
-    <button class="add-btn" onclick="openExpenseModal()">+</button>
+<div class="page" id="pg-expenses">
+  <div class="sec-head">
+    <div class="sec-title">Expenses</div>
+    <button class="sec-btn" onclick="openExpenseModal()">+</button>
   </div>
-  <div class="tabs">
-    <div class="tab active" onclick="filterExp('all',this)">All</div>
-    <div class="tab" onclick="filterExp('daily',this)">Daily</div>
-    <div class="tab" onclick="filterExp('bills',this)">Bills</div>
-    <div class="tab" onclick="filterExp('other',this)">Other</div>
+  <div class="seg-ctrl" id="expSeg">
+    <div class="seg-btn active" onclick="segFilter('expenses','all',this)">All</div>
+    <div class="seg-btn" onclick="segFilter('expenses','daily',this)">Daily</div>
+    <div class="seg-btn" onclick="segFilter('expenses','bills',this)">Bills</div>
   </div>
   <div id="expensesList"></div>
 </div>
 
 <!-- ===== SETTINGS ===== -->
-<div class="page" id="page-settings">
-  <div class="section-head"><div class="section-title">Settings</div></div>
-
-  <!-- Google Sheets Sync - FREE via Apps Script -->
-  <div class="settings-group">
-    <div class="settings-group-title">☁️ Google Sheets Sync (100% Free)</div>
-    
-    <div class="setting-row" onclick="toggleGsPanel()">
-      <div class="setting-icon" style="background:var(--green-bg)">📊</div>
-      <div class="setting-info">
-        <div class="title">Sync Status</div>
-        <div class="desc" id="gsStatusText">Not connected — tap to setup (FREE, no cloud console)</div>
+<div class="page" id="pg-settings">
+  <div class="group">
+    <div class="group-header">Google Sheets Sync (Free)</div>
+    <div class="list">
+      <div class="list-item" onclick="toggleGsPanel()">
+        <div class="list-item-icon" style="background:var(--green)">📊</div>
+        <div class="list-item-content">
+          <div class="list-item-title">Sync Status</div>
+          <div class="list-item-sub" id="gsStatusText">Not connected</div>
+        </div>
+        <div class="list-item-arrow">›</div>
       </div>
-      <div class="setting-arrow">›</div>
     </div>
-
     <div id="gsSetup" style="display:none;">
-      
-      <!-- Step by step guide -->
-      <div class="gs-panel">
-        <h4>🆓 Setup (100% Free — 2 minutes)</h4>
-        <div class="gs-steps" style="line-height:2;">
-          <strong>Step 1:</strong> Open <a href="https://sheets.google.com" target="_blank">Google Sheets</a> → Create a new blank spreadsheet<br><br>
-          
-          <strong>Step 2:</strong> In that sheet, click <strong>Extensions → Apps Script</strong><br><br>
-          
-          <strong>Step 3:</strong> Delete any code there, and paste this code:<br>
-          <div style="position:relative;margin-top:8px;">
-            <pre id="scriptCode" style="background:#0d0d1a;padding:12px;border-radius:10px;font-size:10px;overflow-x:auto;white-space:pre;color:var(--text-2);border:1px solid var(--border);max-height:200px;overflow-y:auto;line-height:1.5;">// InvestTrack Google Sheets Sync Script
-// Paste this in Apps Script, then Deploy as Web App
-
-function doPost(e) {
-  try {
-    var data = JSON.parse(e.postData.contents);
-    var ss = SpreadsheetApp.getActiveSpreadsheet();
-    
-    if (data.action === 'sync') {
-      syncAll(ss, data.sheets);
-      return ContentService
-        .createTextOutput(JSON.stringify({status:'ok'}))
-        .setMimeType(ContentService.MimeType.JSON);
-    }
-    
-    if (data.action === 'ping') {
-      return ContentService
-        .createTextOutput(JSON.stringify({status:'ok',msg:'InvestTrack connected!'}))
-        .setMimeType(ContentService.MimeType.JSON);
-    }
-    
-    return ContentService
-      .createTextOutput(JSON.stringify({status:'error',msg:'Unknown action'}))
-      .setMimeType(ContentService.MimeType.JSON);
-  } catch(err) {
-    return ContentService
-      .createTextOutput(JSON.stringify({status:'error',msg:err.toString()}))
-      .setMimeType(ContentService.MimeType.JSON);
-  }
-}
-
-function doGet(e) {
-  return ContentService
-    .createTextOutput(JSON.stringify({status:'ok',msg:'InvestTrack Sync is running!'}))
-    .setMimeType(ContentService.MimeType.JSON);
-}
-
-function syncAll(ss, sheets) {
-  // Helper: create or get sheet tab, clear it, write data
-  function writeTab(name, headers, rows) {
-    var sheet = ss.getSheetByName(name);
-    if (!sheet) sheet = ss.insertSheet(name);
-    sheet.clear();
-    if (rows.length === 0) return;
-    var values = [headers].concat(rows);
-    sheet.getRange(1, 1, values.length, headers.length).setValues(values);
-    // Auto-resize columns
-    for (var i = 1; i <= headers.length; i++) {
-      sheet.autoResizeColumn(i);
-    }
-    // Bold header
-    sheet.getRange(1,1,1,headers.length).setFontWeight('bold');
-  }
-
-  // Stocks
-  if (sheets.stocks && sheets.stocks.length > 0) {
-    var rows = sheets.stocks.map(function(s) {
-      return [s.symbol, s.qty, s.buyPrice, s.currentPrice,
-        s.qty*s.buyPrice, s.qty*s.currentPrice,
-        (s.qty*s.currentPrice)-(s.qty*s.buyPrice),
-        s.broker, s.date];
-    });
-    writeTab('Stocks',
-      ['Symbol','Qty','Buy Price','Current Price','Invested','Current Value','P&L','Broker','Date'],
-      rows);
-  }
-
-  // Mutual Funds
-  if (sheets.mutual_funds && sheets.mutual_funds.length > 0) {
-    var rows = sheets.mutual_funds.map(function(m) {
-      return [m.name, m.type, m.units, m.buyNAV, m.currentNAV,
-        m.units*m.buyNAV, m.units*m.currentNAV,
-        (m.units*m.currentNAV)-(m.units*m.buyNAV),
-        m.platform, m.date];
-    });
-    writeTab('MutualFunds',
-      ['Fund Name','Type','Units','Buy NAV','Current NAV','Invested','Current Value','P&L','Platform','Date'],
-      rows);
-  }
-
-  // Savings
-  if (sheets.savings && sheets.savings.length > 0) {
-    var rows = sheets.savings.map(function(s) {
-      return [s.name, s.type, s.amount, (s.rate||0)+'%', s.institution||''];
-    });
-    writeTab('Savings',
-      ['Name','Type','Amount','Interest Rate','Institution'],
-      rows);
-  }
-
-  // Expenses
-  if (sheets.expenses && sheets.expenses.length > 0) {
-    var rows = sheets.expenses.map(function(e) {
-      return [e.date, e.category, e.description, e.amount, e.payment, e.type];
-    });
-    writeTab('Expenses',
-      ['Date','Category','Description','Amount','Payment','Type'],
-      rows);
-  }
-
-  // Summary
-  var stCur = (sheets.stocks||[]).reduce(function(a,s){return a+s.qty*s.currentPrice;},0);
-  var mfCur = (sheets.mutual_funds||[]).reduce(function(a,m){return a+m.units*m.currentNAV;},0);
-  var svTot = (sheets.savings||[]).reduce(function(a,s){return a+s.amount;},0);
-  var now = new Date();
-  var mo = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
-  var mExp = (sheets.expenses||[]).filter(function(e){return (e.date||'').indexOf(mo)===0;}).reduce(function(a,e){return a+e.amount;},0);
-  
-  writeTab('Summary',
-    ['Metric','Value'],
-    [
-      ['Total Net Worth', stCur+mfCur+svTot],
-      ['Stocks Value', stCur],
-      ['Mutual Funds Value', mfCur],
-      ['Total Savings', svTot],
-      ['Monthly Expenses', mExp],
-      ['Total Stocks', (sheets.stocks||[]).length],
-      ['Total Funds', (sheets.mutual_funds||[]).length],
-      ['Total Savings Accounts', (sheets.savings||[]).length],
-      ['Last Synced', now.toLocaleString('en-IN')]
-    ]);
-}
-
-// ===== HOW TO DEPLOY =====
-// 1. Paste this code in Apps Script editor
-// 2. Click "Deploy" → "New deployment"
-// 3. Click gear icon → select "Web app"
-// 4. Set "Execute as": Me
-// 5. Set "Who has access": Anyone
-// 6. Click "Deploy"
-// 7. Copy the Web App URL
-// 8. Paste it in InvestTrack app settings</pre>
-            <button onclick="copyScript()" style="position:absolute;top:8px;right:8px;background:var(--accent);color:white;border:none;padding:6px 12px;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;font-family:Inter,sans-serif;">📋 Copy</button>
-          </div>
-          <br><br>
-          
-          <strong>Step 4:</strong> Click <strong>Deploy → New deployment</strong><br>
-          &nbsp;&nbsp;• Click gear icon ⚙️ → Select <strong>"Web app"</strong><br>
-          &nbsp;&nbsp;• Execute as: <strong>Me</strong><br>
-          &nbsp;&nbsp;• Who has access: <strong>Anyone</strong><br>
-          &nbsp;&nbsp;• Click <strong>Deploy</strong><br><br>
-          
-          <strong>Step 5:</strong> Copy the <strong>Web App URL</strong> and paste below 👇
+      <div style="padding:12px 16px;">
+        <div style="font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:12px;">
+          <strong style="color:var(--text);">Setup (100% Free):</strong><br>
+          1. Open <a href="https://sheets.google.com" target="_blank" style="color:var(--blue)">Google Sheets</a> → New spreadsheet<br>
+          2. Extensions → Apps Script<br>
+          3. Paste code from <strong>apps-script-code.js</strong><br>
+          4. Deploy → New deployment → Web app<br>
+          5. Access: Anyone → Deploy<br>
+          6. Copy URL & paste below
         </div>
-        
-        <div class="gs-input-group" style="margin-top:14px;">
-          <input type="text" id="gScriptUrl" placeholder="Paste Web App URL here (starts with https://script.google.com/...)">
-          <button class="gs-save-btn" onclick="saveScriptUrl()">Save</button>
+        <div style="display:flex;gap:8px;">
+          <input type="url" id="gScriptUrl" placeholder="Paste Web App URL..." style="flex:1;padding:12px;background:var(--card2);border:none;border-radius:10px;color:var(--text);font-size:14px;outline:none;font-family:inherit;">
+          <button onclick="saveScriptUrl()" style="padding:12px 16px;background:var(--blue);color:white;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;">Save</button>
         </div>
-        <div class="gs-status" id="gsSetupStatus"></div>
-      </div>
-
-      <!-- Action buttons -->
-      <div class="setting-row" onclick="testConnection()">
-        <div class="setting-icon" style="background:rgba(124,92,252,0.12)">🧪</div>
-        <div class="setting-info">
-          <div class="title">Test Connection</div>
-          <div class="desc">Check if your script URL works</div>
+        <div style="display:flex;gap:8px;margin-top:8px;">
+          <button onclick="testConnection()" style="flex:1;padding:12px;background:var(--fill);border:none;border-radius:10px;color:var(--blue);font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;">🧪 Test</button>
+          <button onclick="syncNow()" style="flex:1;padding:12px;background:var(--fill);border:none;border-radius:10px;color:var(--green);font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;">🔄 Sync Now</button>
         </div>
-        <div class="setting-arrow">›</div>
-      </div>
-
-      <div class="setting-row" onclick="syncNow()">
-        <div class="setting-icon" style="background:rgba(96,165,250,0.12)">🔄</div>
-        <div class="setting-info">
-          <div class="title">Sync Now</div>
-          <div class="desc">Push all data to Google Sheets</div>
-        </div>
-        <div class="setting-arrow">›</div>
+        <div id="gsSetupStatus" style="margin-top:8px;font-size:13px;color:var(--text3);"></div>
       </div>
     </div>
   </div>
 
-  <!-- Budget -->
-  <div class="settings-group">
-    <div class="settings-group-title">💰 Budget</div>
-    <div class="setting-row" onclick="openBudgetModal()">
-      <div class="setting-icon" style="background:rgba(251,191,36,0.12)">🎯</div>
-      <div class="setting-info">
-        <div class="title">Monthly Budget</div>
-        <div class="desc" id="budgetDesc">Not set</div>
+  <div class="group">
+    <div class="group-header">Budget</div>
+    <div class="list">
+      <div class="list-item" onclick="openBudgetModal()">
+        <div class="list-item-icon" style="background:var(--orange)">🎯</div>
+        <div class="list-item-content"><div class="list-item-title">Monthly Budget</div></div>
+        <div class="list-item-value" id="budgetVal">Not set</div>
+        <div class="list-item-arrow">›</div>
       </div>
-      <div class="setting-arrow">›</div>
     </div>
   </div>
 
-  <!-- Data -->
-  <div class="settings-group">
-    <div class="settings-group-title">📦 Data</div>
-    <div class="setting-row" onclick="exportData()">
-      <div class="setting-icon" style="background:rgba(96,165,250,0.12)">📤</div>
-      <div class="setting-info">
-        <div class="title">Export Backup</div>
-        <div class="desc">Download all data as JSON</div>
+  <div class="group">
+    <div class="group-header">Data</div>
+    <div class="list">
+      <div class="list-item" onclick="exportData()">
+        <div class="list-item-icon" style="background:var(--blue)">📤</div>
+        <div class="list-item-content"><div class="list-item-title">Export Backup</div></div>
+        <div class="list-item-arrow">›</div>
       </div>
-      <div class="setting-arrow">›</div>
-    </div>
-    <div class="setting-row" onclick="document.getElementById('importFile').click()">
-      <div class="setting-icon" style="background:rgba(52,211,153,0.12)">📥</div>
-      <div class="setting-info">
-        <div class="title">Import Backup</div>
-        <div class="desc">Restore from JSON file</div>
+      <div class="list-item" onclick="document.getElementById('importFile').click()">
+        <div class="list-item-icon" style="background:var(--teal)">📥</div>
+        <div class="list-item-content"><div class="list-item-title">Import Backup</div></div>
+        <div class="list-item-arrow">›</div>
       </div>
-      <div class="setting-arrow">›</div>
-    </div>
-    <div class="setting-row" onclick="clearAll()">
-      <div class="setting-icon" style="background:var(--red-bg)">🗑️</div>
-      <div class="setting-info">
-        <div class="title" style="color:var(--red)">Clear All Data</div>
-        <div class="desc">Delete everything permanently</div>
+      <div class="list-item" onclick="clearAll()">
+        <div class="list-item-icon" style="background:var(--red)">🗑️</div>
+        <div class="list-item-content"><div class="list-item-title" style="color:var(--red)">Clear All Data</div></div>
+        <div class="list-item-arrow">›</div>
       </div>
-      <div class="setting-arrow">›</div>
     </div>
   </div>
-
   <input type="file" id="importFile" accept=".json" style="display:none" onchange="handleImport(event)">
-
-  <div style="text-align:center;padding:20px;font-size:11px;color:var(--text-3);">
-    InvestTrack v2.0 · Made with ❤️
-  </div>
+  <div style="text-align:center;padding:20px;font-size:12px;color:var(--text3);">InvestTrack v3.0</div>
 </div>
 
-<!-- ===== BOTTOM NAV ===== -->
-<div class="bottom-nav">
-  <div class="nav-btn active" onclick="switchPage('dashboard',this)">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+<!-- ===== TAB BAR ===== -->
+<div class="tabbar">
+  <div class="tab-item active" onclick="go('home',this)">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3L4 9v12h5v-7h6v7h5V9z"/></svg>
     Home
   </div>
-  <div class="nav-btn" onclick="switchPage('stocks',this)">
+  <div class="tab-item" onclick="go('stocks',this)">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
     Stocks
   </div>
-  <div class="nav-btn" onclick="switchPage('mf',this)">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+  <div class="tab-item" onclick="go('mf',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
     Funds
   </div>
-  <div class="nav-btn" onclick="switchPage('savings',this)">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 5c-1.5 0-2.5 1-4 2-1.5-1-2.5-2-4-2C7 5 3 9 3 9s4 3 6 4c0 0 1 2 4 2 3 0 4-2 4-2 2-1 6-4 6-4s-4-4-8-4z"/></svg>
+  <div class="tab-item" onclick="go('savings',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 5c-1.5 0-2.5 1-4 2-1.5-1-2.5-2-4-2C7 5 3 9 3 9s4 3 6 4c0 0 1 2 4 2 3 0 4-2 4-2 2-1 6-4 6-4s-4-4-4-4z"/></svg>
     Savings
   </div>
-  <div class="nav-btn" onclick="switchPage('expenses',this)">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+  <div class="tab-item" onclick="go('expenses',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
     Expenses
+  </div>
+  <div class="tab-item" onclick="go('settings',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+    Settings
   </div>
 </div>
 
@@ -1243,106 +775,132 @@ function syncAll(ss, sheets) {
 
 <!-- Stock Modal -->
 <div class="modal-bg" id="stockModal">
-  <div class="sheet">
-    <div class="sheet-handle"></div>
-    <h3 id="stockModalTitle">Add Stock</h3>
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <button class="modal-cancel" onclick="closeModal('stockModal')">Cancel</button>
+      <h3 id="stockModalTitle">Add Stock</h3>
+      <button class="modal-save" onclick="saveStock()">Save</button>
+    </div>
     <input type="hidden" id="stockEditId">
     <div class="field">
-      <label>Stock Symbol</label>
-      <input type="text" id="stockSymbol" placeholder="e.g., RELIANCE, TCS, INFY">
-      <button class="fetch-btn" onclick="fetchStock()">🔄 Fetch Live Price</button>
-      <div class="fetch-result" id="stockFetchRes"></div>
+      <div class="field-inner">
+        <div class="field-row"><span class="field-label">Symbol</span><input class="field-input" id="stockSymbol" placeholder="RELIANCE" style="text-transform:uppercase;"></div>
+        <div class="field-row"><span class="field-label">Quantity</span><input class="field-input" id="stockQty" placeholder="10" type="number" inputmode="decimal"></div>
+        <div class="field-row"><span class="field-label">Buy ₹</span><input class="field-input" id="stockBuy" placeholder="2500.00" type="number" step="0.01" inputmode="decimal"></div>
+        <div class="field-row"><span class="field-label">Current ₹</span><input class="field-input" id="stockCur" placeholder="Auto-fetch ↓" type="number" step="0.01" inputmode="decimal"></div>
+        <div class="field-row"><span class="field-label">Date</span><input class="field-input" id="stockDate" type="date"></div>
+        <div class="field-row"><span class="field-label">Broker</span><select class="field-input" id="stockBroker"><option>Zerodha</option><option>Groww</option><option>Upstox</option><option>Angel One</option><option>ICICI Direct</option><option>Other</option></select></div>
+      </div>
     </div>
-    <div class="field"><label>Quantity</label><input type="number" id="stockQty" placeholder="10" inputmode="decimal"></div>
-    <div class="field"><label>Buy Price (₹)</label><input type="number" id="stockBuy" placeholder="2500.00" step="0.01" inputmode="decimal"></div>
-    <div class="field"><label>Current Price (₹)</label><input type="number" id="stockCur" placeholder="2650.00" step="0.01" inputmode="decimal"></div>
-    <div class="field"><label>Buy Date</label><input type="date" id="stockDate"></div>
-    <div class="field">
-      <label>Broker</label>
-      <select id="stockBroker"><option>Zerodha</option><option>Groww</option><option>Upstox</option><option>Angel One</option><option>ICICI Direct</option><option>HDFC Securities</option><option>Other</option></select>
-    </div>
-    <button class="submit-btn" onclick="saveStock()">Save</button>
-    <button class="cancel-btn" onclick="closeModal('stockModal')">Cancel</button>
+    <button class="fetch-live" id="fetchStockBtn" onclick="fetchStock()">
+      <span class="icon">📡</span><span class="spin">⏳</span> Fetch Live NSE Price
+    </button>
+    <div class="fetch-status" id="stockFetchRes"></div>
   </div>
 </div>
 
 <!-- MF Modal -->
 <div class="modal-bg" id="mfModal">
-  <div class="sheet">
-    <div class="sheet-handle"></div>
-    <h3 id="mfModalTitle">Add Mutual Fund</h3>
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <button class="modal-cancel" onclick="closeModal('mfModal')">Cancel</button>
+      <h3 id="mfModalTitle">Add Mutual Fund</h3>
+      <button class="modal-save" onclick="saveMF()">Save</button>
+    </div>
     <input type="hidden" id="mfEditId">
     <div class="field">
-      <label>Scheme Name</label>
-      <input type="text" id="mfName" placeholder="e.g., Parag Parikh Flexi Cap Fund">
-      <button class="fetch-btn" onclick="fetchNAV()">🔄 Fetch Latest NAV</button>
-      <div class="fetch-result" id="mfFetchRes"></div>
+      <div class="field-inner">
+        <div class="field-row"><span class="field-label">Fund</span><input class="field-input" id="mfName" placeholder="Parag Parikh Flexi Cap"></div>
+        <div class="field-row"><span class="field-label">Type</span><select class="field-input" id="mfType"><option>Equity</option><option>Debt</option><option>Hybrid</option><option>Index</option><option>ELSS</option><option>Liquid</option></select></div>
+        <div class="field-row"><span class="field-label">Units</span><input class="field-input" id="mfUnits" placeholder="100.500" type="number" step="0.001" inputmode="decimal"></div>
+        <div class="field-row"><span class="field-label">Buy NAV</span><input class="field-input" id="mfBuyNAV" placeholder="65.50" type="number" step="0.01" inputmode="decimal"></div>
+        <div class="field-row"><span class="field-label">Nav ₹</span><input class="field-input" id="mfCurNAV" placeholder="Auto-fetch ↓" type="number" step="0.01" inputmode="decimal"></div>
+        <div class="field-row"><span class="field-label">Date</span><input class="field-input" id="mfDate" type="date"></div>
+        <div class="field-row"><span class="field-label">Platform</span><select class="field-input" id="mfPlatform"><option>Groww</option><option>Zerodha Coin</option><option>Kuvera</option><option>ETMoney</option><option>Direct AMC</option><option>Other</option></select></div>
+      </div>
     </div>
-    <div class="field"><label>Fund Type</label><select id="mfType"><option>Equity</option><option>Debt</option><option>Hybrid</option><option>Index</option><option>ELSS</option><option>Liquid</option><option>Other</option></select></div>
-    <div class="field"><label>Units</label><input type="number" id="mfUnits" placeholder="100.500" step="0.001" inputmode="decimal"></div>
-    <div class="field"><label>Buy NAV (₹)</label><input type="number" id="mfBuyNAV" placeholder="65.50" step="0.01" inputmode="decimal"></div>
-    <div class="field"><label>Current NAV (₹)</label><input type="number" id="mfCurNAV" placeholder="72.30" step="0.01" inputmode="decimal"></div>
-    <div class="field"><label>Investment Date</label><input type="date" id="mfDate"></div>
-    <div class="field"><label>Platform</label><select id="mfPlatform"><option>Groww</option><option>Zerodha Coin</option><option>Kuvera</option><option>ETMoney</option><option>Direct AMC</option><option>Other</option></select></div>
-    <button class="submit-btn" onclick="saveMF()">Save</button>
-    <button class="cancel-btn" onclick="closeModal('mfModal')">Cancel</button>
+    <button class="fetch-live" id="fetchMFBtn" onclick="fetchNAV()">
+      <span class="icon">📡</span><span class="spin">⏳</span> Fetch Latest NAV
+    </button>
+    <div class="fetch-status" id="mfFetchRes"></div>
   </div>
 </div>
 
 <!-- Savings Modal -->
 <div class="modal-bg" id="savingsModal">
-  <div class="sheet">
-    <div class="sheet-handle"></div>
-    <h3 id="savingsModalTitle">Add Savings</h3>
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <button class="modal-cancel" onclick="closeModal('savingsModal')">Cancel</button>
+      <h3 id="savingsModalTitle">Add Savings</h3>
+      <button class="modal-save" onclick="saveSavings()">Save</button>
+    </div>
     <input type="hidden" id="savingsEditId">
-    <div class="field"><label>Account Name</label><input type="text" id="savingsName" placeholder="e.g., SBI Savings Account"></div>
-    <div class="field"><label>Type</label><select id="savingsType"><option>Bank Account</option><option>Fixed Deposit</option><option>Recurring Deposit</option><option>PPF</option><option>NPS</option><option>EPF</option><option>Gold</option><option>Cash</option><option>Other</option></select></div>
-    <div class="field"><label>Amount (₹)</label><input type="number" id="savingsAmt" placeholder="500000" inputmode="decimal"></div>
-    <div class="field"><label>Interest Rate (% p.a.)</label><input type="number" id="savingsRate" placeholder="7.0" step="0.1" inputmode="decimal"></div>
-    <div class="field"><label>Institution</label><input type="text" id="savingsInst" placeholder="e.g., SBI, HDFC, Post Office"></div>
-    <button class="submit-btn" onclick="saveSavings()">Save</button>
-    <button class="cancel-btn" onclick="closeModal('savingsModal')">Cancel</button>
+    <div class="field">
+      <div class="field-inner">
+        <div class="field-row"><span class="field-label">Name</span><input class="field-input" id="savingsName" placeholder="SBI Account"></div>
+        <div class="field-row"><span class="field-label">Type</span><select class="field-input" id="savingsType"><option>Bank Account</option><option>Fixed Deposit</option><option>Recurring Deposit</option><option>PPF</option><option>NPS</option><option>EPF</option><option>Gold</option><option>Cash</option></select></div>
+        <div class="field-row"><span class="field-label">Amount</span><input class="field-input" id="savingsAmt" placeholder="500000" type="number" inputmode="decimal"></div>
+        <div class="field-row"><span class="field-label">Rate %</span><input class="field-input" id="savingsRate" placeholder="7.0" type="number" step="0.1" inputmode="decimal"></div>
+        <div class="field-row"><span class="field-label">Bank</span><input class="field-input" id="savingsInst" placeholder="SBI"></div>
+      </div>
+    </div>
+    <button class="save-btn" onclick="saveSavings()">Save</button>
   </div>
 </div>
 
 <!-- Expense Modal -->
 <div class="modal-bg" id="expenseModal">
-  <div class="sheet">
-    <div class="sheet-handle"></div>
-    <h3 id="expenseModalTitle">Add Expense</h3>
-    <input type="hidden" id="expenseEditId">
-    <div class="field">
-      <label>Category</label>
-      <div class="cat-grid" id="catGrid"></div>
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <button class="modal-cancel" onclick="closeModal('expenseModal')">Cancel</button>
+      <h3 id="expenseModalTitle">Add Expense</h3>
+      <button class="modal-save" onclick="saveExpense()">Save</button>
     </div>
-    <div class="field"><label>Description</label><input type="text" id="expDesc" placeholder="e.g., Groceries at BigBasket"></div>
-    <div class="field"><label>Amount (₹)</label><input type="number" id="expAmt" placeholder="1500" inputmode="decimal"></div>
-    <div class="field"><label>Date</label><input type="date" id="expDate"></div>
-    <div class="field"><label>Payment</label><select id="expPay"><option>UPI</option><option>Credit Card</option><option>Debit Card</option><option>Cash</option><option>Net Banking</option><option>Other</option></select></div>
-    <div class="field"><label>Type</label><select id="expType"><option value="daily">Daily Expense</option><option value="bills">Bills & Utilities</option><option value="other">Other</option></select></div>
-    <button class="submit-btn" onclick="saveExpense()">Save</button>
-    <button class="cancel-btn" onclick="closeModal('expenseModal')">Cancel</button>
+    <input type="hidden" id="expenseEditId">
+    <div style="padding:8px 0 0;"><div style="font-size:13px;color:var(--text2);padding:0 16px 4px;">CATEGORY</div></div>
+    <div class="cat-grid" id="catGrid"></div>
+    <div class="field">
+      <div class="field-inner" style="margin:8px 16px;">
+        <div class="field-row"><span class="field-label">Desc</span><input class="field-input" id="expDesc" placeholder="Groceries"></div>
+        <div class="field-row"><span class="field-label">Amount</span><input class="field-input" id="expAmt" placeholder="₹ 0" type="number" inputmode="decimal"></div>
+        <div class="field-row"><span class="field-label">Date</span><input class="field-input" id="expDate" type="date"></div>
+        <div class="field-row"><span class="field-label">Paid</span><select class="field-input" id="expPay"><option>UPI</option><option>Credit Card</option><option>Debit Card</option><option>Cash</option><option>Net Banking</option></select></div>
+        <div class="field-row"><span class="field-label">Type</span><select class="field-input" id="expType"><option value="daily">Daily</option><option value="bills">Bills</option><option value="other">Other</option></select></div>
+      </div>
+    </div>
+    <button class="save-btn" onclick="saveExpense()">Save</button>
   </div>
 </div>
 
 <!-- Budget Modal -->
 <div class="modal-bg" id="budgetModal">
-  <div class="sheet">
-    <div class="sheet-handle"></div>
-    <h3>Monthly Budget</h3>
-    <div class="field"><label>Budget Amount (₹)</label><input type="number" id="budgetInput" placeholder="50000" inputmode="decimal"></div>
-    <button class="submit-btn" onclick="saveBudget()">Save Budget</button>
-    <button class="cancel-btn" onclick="closeModal('budgetModal')">Cancel</button>
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <button class="modal-cancel" onclick="closeModal('budgetModal')">Cancel</button>
+      <h3>Monthly Budget</h3>
+      <button class="modal-save" onclick="saveBudget()">Save</button>
+    </div>
+    <div class="field">
+      <div class="field-inner" style="margin:16px;">
+        <div class="field-row"><span class="field-label">Budget ₹</span><input class="field-input" id="budgetInput" placeholder="50000" type="number" inputmode="decimal"></div>
+      </div>
+    </div>
   </div>
 </div>
 
 <!-- Confirm -->
 <div class="confirm-bg" id="confirmBg">
   <div class="confirm-box">
-    <div class="msg" id="confirmMsg">Are you sure?</div>
+    <div class="confirm-title" id="confirmTitle">Delete?</div>
+    <div class="confirm-msg" id="confirmMsg">This can't be undone.</div>
     <div class="confirm-btns">
-      <button class="btn-no" onclick="closeConfirm()">Cancel</button>
-      <button class="btn-yes" onclick="doConfirm()">Delete</button>
+      <button onclick="closeConfirm()">Cancel</button>
+      <button class="danger" onclick="doConfirm()">Delete</button>
     </div>
   </div>
 </div>
@@ -1350,794 +908,428 @@ function syncAll(ss, sheets) {
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
-<!-- No external APIs needed for free sync -->
-
 <script>
-// ===========================
-// DATABASE (IndexedDB)
-// ===========================
-const STORES = ['stocks','mutual_funds','savings','expenses','settings'];
+// ============ DB ============
+const STORES=['stocks','mutual_funds','savings','expenses','settings'];
 let db;
+function openDB(){return new Promise((r,j)=>{const q=indexedDB.open('it3',1);q.onupgradeneeded=e=>{const d=e.target.result;STORES.forEach(s=>{if(!d.objectStoreNames.contains(s))d.createObjectStore(s,{keyPath:'id',autoIncrement:true})})};q.onsuccess=e=>{db=e.target.result;r()};q.onerror=e=>j(e)})}
+function getAll(st){return new Promise((r,j)=>{const q=db.transaction(st).objectStore(st).getAll();q.onsuccess=()=>r(q.result);q.onerror=()=>j(q)})}
+function putItem(st,item){return new Promise((r,j)=>{const t=db.transaction(st,'readwrite');const s=t.objectStore(st);if(item.id)s.put(item);else{delete item.id;s.add(item)}t.oncomplete=()=>r();t.onerror=()=>j(t.error)})}
+function delItem(st,id){return new Promise((r,j)=>{const t=db.transaction(st,'readwrite');t.objectStore(st).delete(id);t.oncomplete=()=>r();t.onerror=()=>j(t.error)})}
+function clearStore(st){return new Promise((r,j)=>{const t=db.transaction(st,'readwrite');t.objectStore(st).clear();t.oncomplete=()=>r();t.onerror=()=>j(t.error)})}
+function getSetting(k){return new Promise(r=>{const q=db.transaction('settings').objectStore('settings').get(k);q.onsuccess=()=>r(q.result?q.result.value:null);q.onerror=()=>r(null)})}
+function setSetting(k,v){return new Promise(r=>{const t=db.transaction('settings','readwrite');t.objectStore('settings').put({id:k,value:v});t.oncomplete=()=>r()})}
 
-function openDB() {
-  return new Promise((res, rej) => {
-    const r = indexedDB.open('investtrack_v2', 1);
-    r.onupgradeneeded = e => {
-      const d = e.target.result;
-      STORES.forEach(s => { if (!d.objectStoreNames.contains(s)) d.createObjectStore(s, {keyPath:'id', autoIncrement:true}); });
-    };
-    r.onsuccess = e => { db = e.target.result; res(); };
-    r.onerror = e => rej(e);
-  });
-}
+// ============ UTIL ============
+const fmt=n=>{if(!n&&n!==0)return'₹0';const a=Math.abs(n);if(a>=1e7)return'₹'+(n/1e7).toFixed(2)+' Cr';if(a>=1e5)return'₹'+(n/1e5).toFixed(2)+' L';return'₹'+n.toLocaleString('en-IN',{maximumFractionDigits:0})};
+const fmtF=n=>'₹'+(n||0).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});
+const fmtD=d=>d?new Date(d).toLocaleDateString('en-IN',{day:'2-digit',month:'short'}):'--';
+const fmtDF=d=>d?new Date(d).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}):'--';
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
 
-function tx(store, mode='readonly') { return db.transaction(store, mode).objectStore(store); }
-
-function getAll(store) { return new Promise((res,rej) => { const r=tx(store).getAll(); r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r); }); }
-function putItem(store, item) { return new Promise((res,rej) => { const t=db.transaction(store,'readwrite'); const s=t.objectStore(store); if(item.id) s.put(item); else { delete item.id; s.add(item); } t.oncomplete=()=>res(); t.onerror=()=>rej(t.error); }); }
-function delItem(store, id) { return new Promise((res,rej) => { const t=db.transaction(store,'readwrite'); t.objectStore(store).delete(id); t.oncomplete=()=>res(); t.onerror=()=>rej(t.error); }); }
-function clearStore(store) { return new Promise((res,rej) => { const t=db.transaction(store,'readwrite'); t.objectStore(store).clear(); t.oncomplete=()=>res(); t.onerror=()=>rej(t.error); }); }
-function getSetting(k) { return new Promise(res => { const r=tx(store='settings').get(k); r.onsuccess=()=>res(r.result?r.result.value:null); r.onerror=()=>res(null); }); }
-function setSetting(k, v) { return new Promise(res => { const t=db.transaction('settings','readwrite'); t.objectStore('settings').put({id:k, value:v}); t.oncomplete=()=>res(); }); }
-
-// ===========================
-// UTILITIES
-// ===========================
-const fmt = n => { if(!n&&n!==0) return '₹0'; const a=Math.abs(n); if(a>=1e7) return '₹'+(n/1e7).toFixed(2)+' Cr'; if(a>=1e5) return '₹'+(n/1e5).toFixed(2)+' L'; return '₹'+n.toLocaleString('en-IN',{maximumFractionDigits:0}); };
-const fmtF = n => '₹'+(n||0).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});
-const fmtD = d => d ? new Date(d).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}) : '--';
-function toast(m) { const t=document.getElementById('toast'); t.textContent=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2200); }
-
-const CATS = [
-  {id:'food',icon:'🍔',label:'Food'},{id:'transport',icon:'🚗',label:'Transport'},
-  {id:'shopping',icon:'🛒',label:'Shopping'},{id:'bills',icon:'💡',label:'Bills'},
-  {id:'rent',icon:'🏠',label:'Rent'},{id:'health',icon:'🏥',label:'Health'},
-  {id:'fun',icon:'🎬',label:'Fun'},{id:'education',icon:'📚',label:'Education'},
-  {id:'groceries',icon:'🥬',label:'Groceries'},{id:'subs',icon:'📱',label:'Subs'},
-  {id:'travel',icon:'✈️',label:'Travel'},{id:'other',icon:'📦',label:'Other'}
+const CATS=[
+  {id:'food',icon:'🍔',bg:'#ff9f0a',label:'Food'},{id:'transport',icon:'🚗',bg:'#0a84ff',label:'Transport'},
+  {id:'shopping',icon:'🛍️',bg:'#ff375f',label:'Shopping'},{id:'bills',icon:'💡',bg:'#ffd60a',label:'Bills'},
+  {id:'rent',icon:'🏠',bg:'#bf5af2',label:'Rent'},{id:'health',icon:'💊',bg:'#30d158',label:'Health'},
+  {id:'fun',icon:'🎬',bg:'#ff453a',label:'Fun'},{id:'education',icon:'📚',bg:'#64d2ff',label:'Edu'},
+  {id:'groceries',icon:'🥬',bg:'#30d158',label:'Grocery'},{id:'subs',icon:'📱',bg:'#5e5ce6',label:'Subs'},
+  {id:'travel',icon:'✈️',bg:'#0a84ff',label:'Travel'},{id:'other',icon:'📦',bg:'#8e8e93',label:'Other'}
 ];
-let selCat = 'food';
-const getCat = id => CATS.find(c=>c.id===id)||CATS[11];
+let selCat='food';
+const getCat=id=>CATS.find(c=>c.id===id)||CATS[11];
+function renderCatGrid(){document.getElementById('catGrid').innerHTML=CATS.map(c=>`<div class="cat-btn ${c.id===selCat?'sel':''}" onclick="pickCat('${c.id}')"><span class="ci">${c.icon}</span>${c.label}</div>`).join('')}
+function pickCat(id){selCat=id;renderCatGrid()}
 
-function renderCatGrid() {
-  document.getElementById('catGrid').innerHTML = CATS.map(c=>`<div class="cat-btn ${c.id===selCat?'selected':''}" onclick="pickCat('${c.id}')"><span class="icon">${c.icon}</span>${c.label}</div>`).join('');
-}
-function pickCat(id) { selCat=id; renderCatGrid(); }
-
-// ===========================
-// NAVIGATION
-// ===========================
-function switchPage(p, el) {
+// ============ NAV ============
+const TITLES={home:'Dashboard',stocks:'Stocks',mf:'Mutual Funds',savings:'Savings',expenses:'Expenses',settings:'Settings'};
+function go(p,el){
   document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active'));
-  document.getElementById('page-'+p).classList.add('active');
-  if(el) el.classList.add('active');
-  if(p==='dashboard') renderDash();
+  document.querySelectorAll('.tab-item').forEach(x=>x.classList.remove('active'));
+  document.getElementById('pg-'+p).classList.add('active');
+  if(el)el.classList.add('active');
+  document.getElementById('navTitle').textContent=TITLES[p]||p;
+  if(p==='home')renderDash();
 }
 
-// ===========================
-// STOCKS
-// ===========================
-let stocks=[], stockFilter='all';
+// ============ LIVE PRICE FETCH ============
+const CORS_PROXIES = [
+  url => 'https://corsproxy.io/?' + encodeURIComponent(url),
+  url => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url),
+  url => 'https://cors-anywhere.herokuapp.com/' + url,
+];
 
-function openStockModal(id) {
-  const f = ['stockEditId','stockSymbol','stockQty','stockBuy','stockCur','stockDate'];
-  f.forEach(x=>document.getElementById(x).value='');
-  document.getElementById('stockDate').value = new Date().toISOString().split('T')[0];
-  document.getElementById('stockBroker').value = 'Zerodha';
-  document.getElementById('stockModalTitle').textContent = 'Add Stock';
-  document.getElementById('stockFetchRes').classList.remove('show');
-  if(id) {
-    const s=stocks.find(x=>x.id===id);
-    if(s) {
-      document.getElementById('stockEditId').value=s.id;
-      document.getElementById('stockSymbol').value=s.symbol;
-      document.getElementById('stockQty').value=s.qty;
-      document.getElementById('stockBuy').value=s.buyPrice;
-      document.getElementById('stockCur').value=s.currentPrice;
-      document.getElementById('stockDate').value=s.date;
-      document.getElementById('stockBroker').value=s.broker;
-      document.getElementById('stockModalTitle').textContent='Edit Stock';
-    }
+async function fetchWithProxy(url) {
+  for (const makeProxy of CORS_PROXIES) {
+    try {
+      const proxyUrl = makeProxy(url);
+      const resp = await fetch(proxyUrl, { signal: AbortSignal.timeout(8000) });
+      if (resp.ok) return await resp.json();
+    } catch(e) { continue; }
   }
-  document.getElementById('stockModal').classList.add('show');
+  throw new Error('All proxies failed');
 }
 
 async function fetchStock() {
   const sym = document.getElementById('stockSymbol').value.trim();
   if(!sym) return toast('Enter symbol first');
-  const r = document.getElementById('stockFetchRes');
-  r.innerHTML = '<span class="spinner"></span> Fetching price...';
-  r.className = 'fetch-result show';
-  r.style.color = 'var(--text-2)';
+  const btn = document.getElementById('fetchStockBtn');
+  const res = document.getElementById('stockFetchRes');
+  btn.classList.add('loading');
+  btn.disabled = true;
+  res.className = 'fetch-status';
+
   try {
-    let y = sym.includes('.') ? sym : sym+'.NS';
-    const resp = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${y}?interval=1d&range=1d`);
-    if(!resp.ok) throw 0;
-    const d = await resp.json();
-    const price = d.chart.result[0].meta.regularMarketPrice;
+    let ysym = sym.includes('.') ? sym : sym + '.NS';
+    const data = await fetchWithProxy(`https://query1.finance.yahoo.com/v8/finance/chart/${ysym}?interval=1d&range=1d`);
+    const price = data.chart.result[0].meta.regularMarketPrice;
+    const prev = data.chart.result[0].meta.chartPreviousClose || data.chart.result[0].meta.previousClose;
+    const change = price - prev;
+    const changePct = prev ? ((change/prev)*100).toFixed(2) : 0;
     document.getElementById('stockCur').value = price;
-    r.innerHTML = `✅ ${sym}: <strong>₹${price}</strong>`;
-    r.style.color = 'var(--green)';
-  } catch {
-    r.innerHTML = '❌ Could not fetch. Add .NS or .BO to symbol, or enter manually.';
-    r.style.color = 'var(--red)';
-  }
-}
-
-async function saveStock() {
-  const eid = document.getElementById('stockEditId').value;
-  const item = {
-    symbol: document.getElementById('stockSymbol').value.trim().toUpperCase(),
-    qty: parseFloat(document.getElementById('stockQty').value)||0,
-    buyPrice: parseFloat(document.getElementById('stockBuy').value)||0,
-    currentPrice: parseFloat(document.getElementById('stockCur').value)||0,
-    date: document.getElementById('stockDate').value,
-    broker: document.getElementById('stockBroker').value,
-    ts: Date.now()
-  };
-  if(!item.symbol||!item.qty||!item.buyPrice) return toast('Fill symbol, qty & buy price');
-  if(eid) item.id=parseInt(eid);
-  await putItem('stocks', item);
-  closeModal('stockModal');
-  toast(eid?'Stock updated ✓':'Stock added ✓');
-  await loadStocks(); updateSummary(); syncSheets();
-}
-
-async function loadStocks() { stocks=await getAll('stocks'); renderStocks(); }
-
-function filterStocks(f,el) {
-  stockFilter=f;
-  document.querySelectorAll('#page-stocks .tab').forEach(t=>t.classList.remove('active'));
-  if(el) el.classList.add('active');
-  renderStocks();
-}
-
-function renderStocks() {
-  const el=document.getElementById('stocksList');
-  let d=[...stocks];
-  if(stockFilter==='gainer') d=d.filter(s=>s.currentPrice>s.buyPrice);
-  if(stockFilter==='loser') d=d.filter(s=>s.currentPrice<s.buyPrice);
-  if(!d.length) { el.innerHTML='<div class="empty"><div class="icon">📈</div><div class="title">No stocks yet</div><div class="desc">Tap + to add your first stock</div></div>'; return; }
-  el.innerHTML = d.map(s => {
-    const inv=s.qty*s.buyPrice, cur=s.qty*s.currentPrice, pl=cur-inv, pct=inv?((pl/inv)*100).toFixed(2):0, up=pl>=0;
-    return `<div class="card">
-      <div class="card-actions"><button class="card-action-btn" onclick="openStockModal(${s.id})">✏️</button><button class="card-action-btn" onclick="askDel('stocks',${s.id},'${s.symbol}')">🗑️</button></div>
-      <div class="card-name">${s.symbol}</div>
-      <div class="card-sub">${s.qty} shares · ${s.broker}</div>
-      <div class="card-meta"><span>Buy: ${fmtF(s.buyPrice)}</span><span>Now: ₹${s.currentPrice}</span><span>${fmtD(s.date)}</span></div>
-      <div class="card-bottom">
-        <div class="card-amount">${fmt(cur)}</div>
-        <div class="badge ${up?'green':'red'}">${up?'▲':'▼'} ${up?'+':''}${fmt(pl)} (${up?'+':''}${pct}%)</div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-// ===========================
-// MUTUAL FUNDS
-// ===========================
-let mfs=[];
-
-function openMFModal(id) {
-  ['mfEditId','mfName','mfUnits','mfBuyNAV','mfCurNAV','mfDate'].forEach(x=>document.getElementById(x).value='');
-  document.getElementById('mfDate').value=new Date().toISOString().split('T')[0];
-  document.getElementById('mfType').value='Equity';
-  document.getElementById('mfPlatform').value='Groww';
-  document.getElementById('mfModalTitle').textContent='Add Mutual Fund';
-  document.getElementById('mfFetchRes').classList.remove('show');
-  if(id) {
-    const m=mfs.find(x=>x.id===id);
-    if(m) {
-      document.getElementById('mfEditId').value=m.id;
-      document.getElementById('mfName').value=m.name;
-      document.getElementById('mfType').value=m.type;
-      document.getElementById('mfUnits').value=m.units;
-      document.getElementById('mfBuyNAV').value=m.buyNAV;
-      document.getElementById('mfCurNAV').value=m.currentNAV;
-      document.getElementById('mfDate').value=m.date;
-      document.getElementById('mfPlatform').value=m.platform;
-      document.getElementById('mfModalTitle').textContent='Edit Mutual Fund';
+    res.innerHTML = `✅ <strong>₹${price}</strong> ${change>=0?'▲':'▼'} ${change>=0?'+':''}${change.toFixed(2)} (${change>=0?'+':''}${changePct}%)`;
+    res.className = 'fetch-status show ok';
+  } catch(e) {
+    // Try alternate: search for symbol
+    try {
+      const searchData = await fetchWithProxy(`https://query1.finance.yahoo.com/v1/finance/search?q=${sym}&quotesCount=3&newsCount=0`);
+      const quotes = searchData.quotes || [];
+      if(quotes.length > 0) {
+        const q = quotes.find(q => q.exchange === 'NSI' || q.exchange === 'BSE') || quotes[0];
+        res.innerHTML = `Found: ${q.shortname || q.longname} (${q.symbol})<br>Try searching with: <strong>${q.symbol}</strong>`;
+        res.className = 'fetch-status show err';
+      } else {
+        throw 0;
+      }
+    } catch {
+      res.innerHTML = '❌ Could not fetch. Try exact NSE symbol (e.g. RELIANCE, TCS, INFY) or enter price manually.';
+      res.className = 'fetch-status show err';
     }
   }
-  document.getElementById('mfModal').classList.add('show');
+  btn.classList.remove('loading');
+  btn.disabled = false;
 }
 
 async function fetchNAV() {
   const name = document.getElementById('mfName').value.trim();
   if(!name) return toast('Enter fund name first');
-  const r = document.getElementById('mfFetchRes');
-  r.innerHTML = '<span class="spinner"></span> Fetching NAV...';
-  r.className = 'fetch-result show';
-  r.style.color = 'var(--text-2)';
+  const btn = document.getElementById('fetchMFBtn');
+  const res = document.getElementById('mfFetchRes');
+  btn.classList.add('loading');
+  btn.disabled = true;
+  res.className = 'fetch-status';
+
   try {
-    const resp = await fetch(`https://api.mfapi.in/mf/${encodeURIComponent(name)}`);
-    if(!resp.ok) throw 0;
-    const d = await resp.json();
-    const nav = d.data[0].nav, dt = d.data[0].date;
+    // MF API - try direct first (it supports CORS)
+    let data;
+    try {
+      const resp = await fetch(`https://api.mfapi.in/mf/${encodeURIComponent(name)}`, { signal: AbortSignal.timeout(6000) });
+      if(!resp.ok) throw 0;
+      data = await resp.json();
+    } catch {
+      data = await fetchWithProxy(`https://api.mfapi.in/mf/${encodeURIComponent(name)}`);
+    }
+    
+    if(!data || !data.data || !data.data.length) throw 0;
+    const nav = data.data[0].nav;
+    const date = data.data[0].date;
     document.getElementById('mfCurNAV').value = nav;
-    r.innerHTML = `✅ NAV: <strong>₹${nav}</strong> (${dt})`;
-    r.style.color = 'var(--green)';
-  } catch {
-    r.innerHTML = '❌ Not found. Try exact scheme name or enter NAV manually.';
-    r.style.color = 'var(--red)';
+    res.innerHTML = `✅ NAV: <strong>₹${nav}</strong> (${date})`;
+    res.className = 'fetch-status show ok';
+  } catch(e) {
+    // Search for fund
+    try {
+      let funds;
+      try {
+        const resp = await fetch('https://api.mfapi.in/mf', { signal: AbortSignal.timeout(6000) });
+        funds = await resp.json();
+      } catch {
+        funds = await fetchWithProxy('https://api.mfapi.in/mf');
+      }
+      const match = funds.filter(f => f.schemeName && f.schemeName.toLowerCase().includes(name.toLowerCase())).slice(0,3);
+      if(match.length) {
+        res.innerHTML = `Found ${match.length} match(es):<br>${match.map(f=>`• ${f.schemeName} (${f.schemeCode})`).join('<br>')}`;
+        res.className = 'fetch-status show err';
+      } else throw 0;
+    } catch {
+      res.innerHTML = '❌ Not found. Enter exact scheme name or NAV manually.';
+      res.className = 'fetch-status show err';
+    }
   }
+  btn.classList.remove('loading');
+  btn.disabled = false;
 }
 
-async function saveMF() {
-  const eid = document.getElementById('mfEditId').value;
-  const item = {
-    name: document.getElementById('mfName').value.trim(),
-    type: document.getElementById('mfType').value,
-    units: parseFloat(document.getElementById('mfUnits').value)||0,
-    buyNAV: parseFloat(document.getElementById('mfBuyNAV').value)||0,
-    currentNAV: parseFloat(document.getElementById('mfCurNAV').value)||0,
-    date: document.getElementById('mfDate').value,
-    platform: document.getElementById('mfPlatform').value,
-    ts: Date.now()
-  };
-  if(!item.name||!item.units||!item.buyNAV) return toast('Fill name, units & buy NAV');
-  if(eid) item.id=parseInt(eid);
-  await putItem('mutual_funds', item);
-  closeModal('mfModal');
-  toast(eid?'Fund updated ✓':'Fund added ✓');
-  await loadMFs(); updateSummary(); syncSheets();
+// ============ STOCKS ============
+let stocks=[],stockFilter='all';
+function openStockModal(id){
+  ['stockEditId','stockSymbol','stockQty','stockBuy','stockCur'].forEach(x=>document.getElementById(x).value='');
+  document.getElementById('stockDate').value=new Date().toISOString().split('T')[0];
+  document.getElementById('stockBroker').value='Zerodha';
+  document.getElementById('stockModalTitle').textContent='Add Stock';
+  document.getElementById('stockFetchRes').className='fetch-status';
+  document.getElementById('fetchStockBtn').classList.remove('loading');
+  if(id){const s=stocks.find(x=>x.id===id);if(s){document.getElementById('stockEditId').value=s.id;document.getElementById('stockSymbol').value=s.symbol;document.getElementById('stockQty').value=s.qty;document.getElementById('stockBuy').value=s.buyPrice;document.getElementById('stockCur').value=s.currentPrice;document.getElementById('stockDate').value=s.date;document.getElementById('stockBroker').value=s.broker;document.getElementById('stockModalTitle').textContent='Edit Stock'}}
+  document.getElementById('stockModal').classList.add('show');
 }
-
-async function loadMFs() { mfs=await getAll('mutual_funds'); renderMFs(); }
-
-function renderMFs() {
-  const el=document.getElementById('mfList');
-  if(!mfs.length) { el.innerHTML='<div class="empty"><div class="icon">🏦</div><div class="title">No mutual funds yet</div><div class="desc">Tap + to add your first fund</div></div>'; return; }
-  el.innerHTML = mfs.map(m => {
-    const inv=m.units*m.buyNAV, cur=m.units*m.currentNAV, pl=cur-inv, pct=inv?((pl/inv)*100).toFixed(2):0, up=pl>=0;
-    return `<div class="card">
-      <div class="card-actions"><button class="card-action-btn" onclick="openMFModal(${m.id})">✏️</button><button class="card-action-btn" onclick="askDel('mutual_funds',${m.id},'${m.name.substring(0,20)}')">🗑️</button></div>
-      <div class="card-name">${m.name}</div>
-      <div class="card-sub">${m.type} · ${m.units.toFixed(3)} units · ${m.platform}</div>
-      <div class="card-meta"><span>Buy NAV: ${fmtF(m.buyNAV)}</span><span>Now: ₹${m.currentNAV}</span><span>${fmtD(m.date)}</span></div>
-      <div class="card-bottom">
-        <div class="card-amount">${fmt(cur)}</div>
-        <div class="badge ${up?'green':'red'}">${up?'▲':'▼'} ${up?'+':''}${fmt(pl)} (${up?'+':''}${pct}%)</div>
-      </div>
+async function saveStock(){
+  const eid=document.getElementById('stockEditId').value;
+  const item={symbol:document.getElementById('stockSymbol').value.trim().toUpperCase(),qty:parseFloat(document.getElementById('stockQty').value)||0,buyPrice:parseFloat(document.getElementById('stockBuy').value)||0,currentPrice:parseFloat(document.getElementById('stockCur').value)||0,date:document.getElementById('stockDate').value,broker:document.getElementById('stockBroker').value,ts:Date.now()};
+  if(!item.symbol||!item.qty||!item.buyPrice)return toast('Fill symbol, qty & price');
+  if(eid)item.id=parseInt(eid);
+  await putItem('stocks',item);closeModal('stockModal');toast(eid?'Updated ✓':'Added ✓');
+  await loadStocks();updateSummary();syncSheets();
+}
+async function loadStocks(){stocks=await getAll('stocks');renderStocks()}
+function segFilter(type,f,el){
+  if(type==='stocks'){stockFilter=f;document.querySelectorAll('#stockSeg .seg-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');renderStocks()}
+  else{expFilter=f;document.querySelectorAll('#expSeg .seg-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');renderExpenses()}
+}
+function renderStocks(){
+  const el=document.getElementById('stocksList');
+  let d=[...stocks];
+  if(stockFilter==='gainer')d=d.filter(s=>s.currentPrice>s.buyPrice);
+  if(stockFilter==='loser')d=d.filter(s=>s.currentPrice<s.buyPrice);
+  if(!d.length){el.innerHTML='<div class="empty-state"><div class="emoji">📈</div><div class="title">No stocks yet</div><div class="desc">Tap + to add your first stock with live prices</div></div>';return}
+  el.innerHTML=d.map(s=>{
+    const inv=s.qty*s.buyPrice,cur=s.qty*s.currentPrice,pl=cur-inv,pct=inv?((pl/inv)*100).toFixed(2):0,up=pl>=0;
+    return`<div class="inv-card" onclick="openStockModal(${s.id})">
+      <div class="inv-card-top"><div><div class="inv-card-name">${s.symbol}</div><div class="inv-card-sub">${s.qty} shares · ${s.broker}</div></div>
+      <div class="inv-card-pl" style="background:${up?'rgba(48,209,88,0.15)':'rgba(255,69,58,0.15)'};color:${up?'var(--green)':'var(--red)'}">
+        ${up?'▲':'▼'} ${up?'+':''}${pct}%
+      </div></div>
+      <div class="inv-card-bottom"><div class="inv-card-price">${fmt(cur)}</div>
+      <div style="font-size:13px;color:${up?'var(--green)':'var(--red)'}">${up?'+':''}${fmt(pl)}</div></div>
+      <div class="inv-card-meta"><span>Buy: ${fmtF(s.buyPrice)}</span><span>Now: ₹${s.currentPrice}</span><span>${fmtDF(s.date)}</span></div>
     </div>`;
   }).join('');
 }
 
-// ===========================
-// SAVINGS
-// ===========================
-let savings=[];
+// ============ MF ============
+let mfs=[];
+function openMFModal(id){
+  ['mfEditId','mfName','mfUnits','mfBuyNAV','mfCurNAV'].forEach(x=>document.getElementById(x).value='');
+  document.getElementById('mfDate').value=new Date().toISOString().split('T')[0];
+  document.getElementById('mfType').value='Equity';document.getElementById('mfPlatform').value='Groww';
+  document.getElementById('mfModalTitle').textContent='Add Mutual Fund';
+  document.getElementById('mfFetchRes').className='fetch-status';
+  document.getElementById('fetchMFBtn').classList.remove('loading');
+  if(id){const m=mfs.find(x=>x.id===id);if(m){document.getElementById('mfEditId').value=m.id;document.getElementById('mfName').value=m.name;document.getElementById('mfType').value=m.type;document.getElementById('mfUnits').value=m.units;document.getElementById('mfBuyNAV').value=m.buyNAV;document.getElementById('mfCurNAV').value=m.currentNAV;document.getElementById('mfDate').value=m.date;document.getElementById('mfPlatform').value=m.platform;document.getElementById('mfModalTitle').textContent='Edit Mutual Fund'}}
+  document.getElementById('mfModal').classList.add('show');
+}
+async function saveMF(){
+  const eid=document.getElementById('mfEditId').value;
+  const item={name:document.getElementById('mfName').value.trim(),type:document.getElementById('mfType').value,units:parseFloat(document.getElementById('mfUnits').value)||0,buyNAV:parseFloat(document.getElementById('mfBuyNAV').value)||0,currentNAV:parseFloat(document.getElementById('mfCurNAV').value)||0,date:document.getElementById('mfDate').value,platform:document.getElementById('mfPlatform').value,ts:Date.now()};
+  if(!item.name||!item.units||!item.buyNAV)return toast('Fill name, units & NAV');
+  if(eid)item.id=parseInt(eid);
+  await putItem('mutual_funds',item);closeModal('mfModal');toast(eid?'Updated ✓':'Added ✓');
+  await loadMFs();updateSummary();syncSheets();
+}
+async function loadMFs(){mfs=await getAll('mutual_funds');renderMFs()}
+function renderMFs(){
+  const el=document.getElementById('mfList');
+  if(!mfs.length){el.innerHTML='<div class="empty-state"><div class="emoji">🏦</div><div class="title">No mutual funds</div><div class="desc">Tap + to add with live NAV fetching</div></div>';return}
+  el.innerHTML=mfs.map(m=>{
+    const inv=m.units*m.buyNAV,cur=m.units*m.currentNAV,pl=cur-inv,pct=inv?((pl/inv)*100).toFixed(2):0,up=pl>=0;
+    return`<div class="inv-card" onclick="openMFModal(${m.id})">
+      <div class="inv-card-top"><div><div class="inv-card-name">${m.name}</div><div class="inv-card-sub">${m.type} · ${m.units.toFixed(3)}u · ${m.platform}</div></div>
+      <div class="inv-card-pl" style="background:${up?'rgba(48,209,88,0.15)':'rgba(255,69,58,0.15)'};color:${up?'var(--green)':'var(--red)'}">
+        ${up?'▲':'▼'} ${up?'+':''}${pct}%
+      </div></div>
+      <div class="inv-card-bottom"><div class="inv-card-price">${fmt(cur)}</div>
+      <div style="font-size:13px;color:${up?'var(--green)':'var(--red)'}">${up?'+':''}${fmt(pl)}</div></div>
+      <div class="inv-card-meta"><span>NAV: ₹${m.currentNAV}</span><span>Buy: ${fmtF(m.buyNAV)}</span><span>${fmtDF(m.date)}</span></div>
+    </div>`;
+  }).join('');
+}
 
-function openSavingsModal(id) {
+// ============ SAVINGS ============
+let savings=[];
+function openSavingsModal(id){
   ['savingsEditId','savingsName','savingsAmt','savingsRate','savingsInst'].forEach(x=>document.getElementById(x).value='');
-  document.getElementById('savingsType').value='Bank Account';
-  document.getElementById('savingsModalTitle').textContent='Add Savings';
-  if(id) {
-    const s=savings.find(x=>x.id===id);
-    if(s) {
-      document.getElementById('savingsEditId').value=s.id;
-      document.getElementById('savingsName').value=s.name;
-      document.getElementById('savingsType').value=s.type;
-      document.getElementById('savingsAmt').value=s.amount;
-      document.getElementById('savingsRate').value=s.rate||'';
-      document.getElementById('savingsInst').value=s.institution||'';
-      document.getElementById('savingsModalTitle').textContent='Edit Savings';
-    }
-  }
+  document.getElementById('savingsType').value='Bank Account';document.getElementById('savingsModalTitle').textContent='Add Savings';
+  if(id){const s=savings.find(x=>x.id===id);if(s){document.getElementById('savingsEditId').value=s.id;document.getElementById('savingsName').value=s.name;document.getElementById('savingsType').value=s.type;document.getElementById('savingsAmt').value=s.amount;document.getElementById('savingsRate').value=s.rate||'';document.getElementById('savingsInst').value=s.institution||'';document.getElementById('savingsModalTitle').textContent='Edit Savings'}}
   document.getElementById('savingsModal').classList.add('show');
 }
-
-async function saveSavings() {
-  const eid = document.getElementById('savingsEditId').value;
-  const item = {
-    name: document.getElementById('savingsName').value.trim(),
-    type: document.getElementById('savingsType').value,
-    amount: parseFloat(document.getElementById('savingsAmt').value)||0,
-    rate: parseFloat(document.getElementById('savingsRate').value)||0,
-    institution: document.getElementById('savingsInst').value.trim(),
-    ts: Date.now()
-  };
-  if(!item.name||!item.amount) return toast('Fill name & amount');
-  if(eid) item.id=parseInt(eid);
-  await putItem('savings', item);
-  closeModal('savingsModal');
-  toast(eid?'Savings updated ✓':'Savings added ✓');
-  await loadSavings(); updateSummary(); syncSheets();
+async function saveSavings(){
+  const eid=document.getElementById('savingsEditId').value;
+  const item={name:document.getElementById('savingsName').value.trim(),type:document.getElementById('savingsType').value,amount:parseFloat(document.getElementById('savingsAmt').value)||0,rate:parseFloat(document.getElementById('savingsRate').value)||0,institution:document.getElementById('savingsInst').value.trim(),ts:Date.now()};
+  if(!item.name||!item.amount)return toast('Fill name & amount');
+  if(eid)item.id=parseInt(eid);
+  await putItem('savings',item);closeModal('savingsModal');toast(eid?'Updated ✓':'Added ✓');
+  await loadSavings();updateSummary();syncSheets();
 }
-
-async function loadSavings() { savings=await getAll('savings'); renderSavings(); }
-
-function renderSavings() {
+async function loadSavings(){savings=await getAll('savings');renderSavings()}
+function renderSavings(){
   const el=document.getElementById('savingsList');
-  if(!savings.length) { el.innerHTML='<div class="empty"><div class="icon">💰</div><div class="title">No savings tracked</div><div class="desc">Tap + to add your first savings account</div></div>'; return; }
-  el.innerHTML = savings.map(s => `<div class="card">
-    <div class="card-actions"><button class="card-action-btn" onclick="openSavingsModal(${s.id})">✏️</button><button class="card-action-btn" onclick="askDel('savings',${s.id},'${s.name}')">🗑️</button></div>
-    <div class="card-name">${s.name}</div>
-    <div class="card-sub">${s.type}${s.institution?' · '+s.institution:''}</div>
-    <div class="card-meta">${s.rate?`<span>${s.rate}% p.a.</span>`:''}</div>
-    <div class="card-bottom"><div class="card-amount" style="color:var(--green)">${fmt(s.amount)}</div></div>
+  if(!savings.length){el.innerHTML='<div class="empty-state"><div class="emoji">💰</div><div class="title">No savings</div><div class="desc">Track bank accounts, FDs, PPF & more</div></div>';return}
+  el.innerHTML=savings.map(s=>`<div class="inv-card" onclick="openSavingsModal(${s.id})">
+    <div class="inv-card-top"><div><div class="inv-card-name">${s.name}</div><div class="inv-card-sub">${s.type}${s.institution?' · '+s.institution:''}</div></div>
+    <div class="inv-card-price" style="color:var(--green)">${fmt(s.amount)}</div></div>
+    ${s.rate?`<div class="inv-card-meta"><span>${s.rate}% p.a. interest</span></div>`:''}
   </div>`).join('');
 }
 
-// ===========================
-// EXPENSES
-// ===========================
-let expenses=[], expFilter='all';
-
-function openExpenseModal(id) {
-  ['expenseEditId','expDesc','expAmt','expDate'].forEach(x=>document.getElementById(x).value='');
+// ============ EXPENSES ============
+let expenses=[],expFilter='all';
+function openExpenseModal(id){
+  ['expenseEditId','expDesc','expAmt'].forEach(x=>document.getElementById(x).value='');
   document.getElementById('expDate').value=new Date().toISOString().split('T')[0];
-  document.getElementById('expPay').value='UPI';
-  document.getElementById('expType').value='daily';
-  document.getElementById('expenseModalTitle').textContent='Add Expense';
-  selCat='food'; renderCatGrid();
-  if(id) {
-    const e=expenses.find(x=>x.id===id);
-    if(e) {
-      document.getElementById('expenseEditId').value=e.id;
-      document.getElementById('expDesc').value=e.description;
-      document.getElementById('expAmt').value=e.amount;
-      document.getElementById('expDate').value=e.date;
-      document.getElementById('expPay').value=e.payment;
-      document.getElementById('expType').value=e.type||'daily';
-      selCat=e.category;
-      document.getElementById('expenseModalTitle').textContent='Edit Expense';
-    }
-  }
+  document.getElementById('expPay').value='UPI';document.getElementById('expType').value='daily';
+  document.getElementById('expenseModalTitle').textContent='Add Expense';selCat='food';renderCatGrid();
+  if(id){const e=expenses.find(x=>x.id===id);if(e){document.getElementById('expenseEditId').value=e.id;document.getElementById('expDesc').value=e.description;document.getElementById('expAmt').value=e.amount;document.getElementById('expDate').value=e.date;document.getElementById('expPay').value=e.payment;document.getElementById('expType').value=e.type||'daily';selCat=e.category;document.getElementById('expenseModalTitle').textContent='Edit Expense'}}
   document.getElementById('expenseModal').classList.add('show');
 }
-
-async function saveExpense() {
-  const eid = document.getElementById('expenseEditId').value;
-  const item = {
-    category: selCat,
-    description: document.getElementById('expDesc').value.trim(),
-    amount: parseFloat(document.getElementById('expAmt').value)||0,
-    date: document.getElementById('expDate').value,
-    payment: document.getElementById('expPay').value,
-    type: document.getElementById('expType').value,
-    ts: Date.now()
-  };
-  if(!item.amount) return toast('Enter an amount');
-  if(eid) item.id=parseInt(eid);
-  await putItem('expenses', item);
-  closeModal('expenseModal');
-  toast(eid?'Expense updated ✓':'Expense added ✓');
-  await loadExpenses(); updateSummary(); syncSheets();
+async function saveExpense(){
+  const eid=document.getElementById('expenseEditId').value;
+  const item={category:selCat,description:document.getElementById('expDesc').value.trim(),amount:parseFloat(document.getElementById('expAmt').value)||0,date:document.getElementById('expDate').value,payment:document.getElementById('expPay').value,type:document.getElementById('expType').value,ts:Date.now()};
+  if(!item.amount)return toast('Enter amount');
+  if(eid)item.id=parseInt(eid);
+  await putItem('expenses',item);closeModal('expenseModal');toast(eid?'Updated ✓':'Added ✓');
+  await loadExpenses();updateSummary();syncSheets();
 }
-
-async function loadExpenses() { expenses=await getAll('expenses'); renderExpenses(); }
-
-function filterExp(f,el) {
-  expFilter=f;
-  document.querySelectorAll('#page-expenses .tab').forEach(t=>t.classList.remove('active'));
-  if(el) el.classList.add('active');
-  renderExpenses();
-}
-
-function renderExpenses() {
+async function loadExpenses(){expenses=await getAll('expenses');renderExpenses()}
+function renderExpenses(){
   const el=document.getElementById('expensesList');
-  let d=[...expenses];
-  if(expFilter!=='all') d=d.filter(e=>e.type===expFilter);
+  let d=[...expenses];if(expFilter!=='all')d=d.filter(e=>e.type===expFilter);
   d.sort((a,b)=>new Date(b.date)-new Date(a.date));
-  if(!d.length) { el.innerHTML='<div class="empty"><div class="icon">💸</div><div class="title">No expenses yet</div><div class="desc">Tap + to track your first expense</div></div>'; return; }
-  const groups={};
-  d.forEach(e=>{ const k=e.date||'?'; if(!groups[k])groups[k]=[]; groups[k].push(e); });
-  let h='';
-  Object.keys(groups).sort((a,b)=>new Date(b)-new Date(a)).forEach(dt=>{
-    const tot=groups[dt].reduce((s,e)=>s+e.amount,0);
-    h+=`<div class="date-header"><span>${fmtD(dt)}</span><span class="date-total">${fmt(tot)}</span></div>`;
-    groups[dt].forEach(e=>{
-      const c=getCat(e.category);
-      h+=`<div class="expense-card">
-        <div class="expense-icon">${c.icon}</div>
-        <div class="expense-info"><div class="name">${e.description||c.label}</div><div class="meta">${e.payment} · ${e.type==='daily'?'Daily':e.type==='bills'?'Bills':'Other'}</div></div>
-        <div class="expense-amount">${fmtF(e.amount)}</div>
-        <div class="expense-actions"><button class="card-action-btn" onclick="openExpenseModal(${e.id})">✏️</button><button class="card-action-btn" onclick="askDel('expenses',${e.id},'expense')">🗑️</button></div>
+  if(!d.length){el.innerHTML='<div class="empty-state"><div class="emoji">💸</div><div class="title">No expenses</div><div class="desc">Track daily spending with categories</div></div>';return}
+  const g={};d.forEach(e=>{const k=e.date||'?';if(!g[k])g[k]=[];g[k].push(e)});
+  let h='';Object.keys(g).sort((a,b)=>new Date(b)-new Date(a)).forEach(dt=>{
+    const tot=g[dt].reduce((s,e)=>s+e.amount,0);
+    h+=`<div class="date-hdr"><span>${fmtDF(dt)}</span><span style="color:var(--text)">−${fmt(tot)}</span></div><div style="background:var(--card);border-radius:14px;margin:0 16px 8px;overflow:hidden">`;
+    g[dt].forEach(e=>{const c=getCat(e.category);
+      h+=`<div class="exp-row" onclick="openExpenseModal(${e.id})">
+        <div class="exp-icon" style="background:${c.bg}22">${c.icon}</div>
+        <div class="exp-info"><div class="exp-name">${e.description||c.label}</div><div class="exp-meta">${e.payment} · ${e.type==='daily'?'Daily':e.type==='bills'?'Bills':'Other'}</div></div>
+        <div class="exp-amount">${fmtF(e.amount)}</div>
       </div>`;
     });
+    h+=`</div>`;
   });
   el.innerHTML=h;
 }
 
-// ===========================
-// DASHBOARD
-// ===========================
-async function renderDash() {
-  const [st,mf,sv,ex] = await Promise.all([getAll('stocks'),getAll('mutual_funds'),getAll('savings'),getAll('expenses')]);
-  const stCur=st.reduce((s,x)=>s+x.qty*x.currentPrice,0);
-  const mfCur=mf.reduce((s,x)=>s+x.units*x.currentNAV,0);
-  const svTot=sv.reduce((s,x)=>s+x.amount,0);
-  const total=stCur+mfCur+svTot;
+// ============ DASHBOARD ============
+async function renderDash(){
+  const[st,mf,sv,ex]=await Promise.all([getAll('stocks'),getAll('mutual_funds'),getAll('savings'),getAll('expenses')]);
+  const stC=st.reduce((s,x)=>s+x.qty*x.currentPrice,0),stI=st.reduce((s,x)=>s+x.qty*x.buyPrice,0);
+  const mfC=mf.reduce((s,x)=>s+x.units*x.currentNAV,0),mfI=mf.reduce((s,x)=>s+x.units*x.buyNAV,0);
+  const svT=sv.reduce((s,x)=>s+x.amount,0);
+  const total=stC+mfC+svT;const totalInv=stI+mfI+svT;
+  const totalPL=total-totalInv;const totalPct=totalInv?((totalPL/totalInv)*100).toFixed(2):0;
+  const up=totalPL>=0;
 
-  // Allocation bars
-  const items=[
-    {label:'Stocks',val:stCur,color:'var(--accent)'},
-    {label:'Mutual Funds',val:mfCur,color:'var(--pink)'},
-    {label:'Savings',val:svTot,color:'var(--green)'}
-  ].filter(i=>i.val>0);
+  document.getElementById('pNetWorth').textContent=fmt(total);
+  const chEl=document.getElementById('pNetChange');
+  chEl.textContent=`${up?'+':''}${fmt(totalPL)} (${up?'+':''}${totalPct}%)`;
+  chEl.style.color=up?'var(--green)':'var(--red)';
+  document.getElementById('pNetSub').textContent=`Invested: ${fmt(totalInv)}`;
 
+  document.getElementById('hStocks').textContent=fmt(stC);
+  const stPL=stC-stI;
+  document.getElementById('hStocksPL').textContent=st.length?`${stPL>=0?'+':''}${fmt(stPL)}`:'No stocks';
+  document.getElementById('hStocksPL').style.color=stPL>=0?'var(--green)':'var(--red)';
+
+  document.getElementById('hMF').textContent=fmt(mfC);
+  const mfPL=mfC-mfI;
+  document.getElementById('hMFPL').textContent=mf.length?`${mfPL>=0?'+':''}${fmt(mfPL)}`:'No funds';
+  document.getElementById('hMFPL').style.color=mfPL>=0?'var(--green)':'var(--red)';
+
+  document.getElementById('hSavings').textContent=fmt(svT);
+  document.getElementById('hSavingsSub').textContent=`${sv.length} accounts`;
+
+  const now=new Date(),mo=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  const mExp=ex.filter(e=>(e.date||'').startsWith(mo)).reduce((s,e)=>s+e.amount,0);
+  document.getElementById('hMonthExp').textContent=fmt(mExp);
+  const budget=await getSetting('budget');
+  if(budget){const pct=((mExp/budget)*100).toFixed(0);document.getElementById('hBudgetSub').textContent=`${pct}% of ${fmt(budget)}`;document.getElementById('hBudgetSub').style.color=mExp>budget?'var(--red)':'var(--green)'}
+
+  // Allocation
+  const items=[{l:'Stocks',v:stC,c:'var(--blue)'},{l:'Mutual Funds',v:mfC,c:'var(--purple)'},{l:'Savings',v:svT,c:'var(--green)'}].filter(i=>i.v>0);
   const ab=document.getElementById('allocBars');
-  if(!total) {
-    ab.innerHTML='<div style="color:var(--text-3);font-size:13px;padding:10px 0;">Add investments to see allocation</div>';
-  } else {
-    ab.innerHTML=items.map(i=>`
-      <div class="alloc-item">
-        <div class="alloc-top">
-          <div class="alloc-label"><div class="alloc-dot" style="background:${i.color}"></div>${i.label}</div>
-          <div class="alloc-val">${fmt(i.val)} <span style="color:var(--text-3);font-weight:400">(${((i.val/total)*100).toFixed(1)}%)</span></div>
-        </div>
-        <div class="alloc-bar"><div class="alloc-fill" style="width:${(i.val/total)*100}%;background:${i.color}"></div></div>
-      </div>
-    `).join('');
-  }
+  if(!total){ab.innerHTML='<div style="color:var(--text3);font-size:14px;padding:12px 0">Add investments to see allocation</div>'}
+  else{ab.innerHTML=items.map(i=>`<div class="alloc-row"><div class="alloc-top"><span style="display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:2px;background:${i.c};display:inline-block"></span>${i.l}</span><span style="font-weight:600">${fmt(i.v)} (${((i.v/total)*100).toFixed(0)}%)</span></div><div class="alloc-bar"><div class="alloc-fill" style="width:${(i.v/total)*100}%;background:${i.c}"></div></div></div>`).join('')}
 
-  // Expense bar chart
-  const monthly={};
-  ex.forEach(e=>{ const k=(e.date||'').substring(0,7); if(k) monthly[k]=(monthly[k]||0)+e.amount; });
+  // Bar chart
+  const monthly={};ex.forEach(e=>{const k=(e.date||'').substring(0,7);if(k)monthly[k]=(monthly[k]||0)+e.amount});
   const months=Object.keys(monthly).sort().slice(-6);
   const canvas=document.getElementById('barChart');
-  const ctx=canvas.getContext('2d');
-  canvas.width=canvas.parentElement.clientWidth-36;
-  canvas.height=180;
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-
-  if(!months.length) {
-    ctx.fillStyle='#606078';
-    ctx.font='13px Inter, sans-serif';
-    ctx.textAlign='center';
-    ctx.fillText('Add expenses to see trends', canvas.width/2, 90);
-  } else {
+  canvas.width=canvas.parentElement.clientWidth-32;canvas.height=150;
+  const ctx=canvas.getContext('2d');ctx.clearRect(0,0,canvas.width,canvas.height);
+  if(!months.length){ctx.fillStyle='#8e8e93';ctx.font='14px -apple-system,sans-serif';ctx.textAlign='center';ctx.fillText('Add expenses to see trends',canvas.width/2,75)}
+  else{
     const max=Math.max(...months.map(m=>monthly[m]));
-    const bw=Math.min(36,(canvas.width-60)/months.length-12);
-    ctx.fillStyle='#606078'; ctx.font='10px Inter, sans-serif'; ctx.textAlign='right';
-    for(let i=0;i<=4;i++){const v=max*(4-i)/4;const y=15+(130*i/4);ctx.fillText(fmt(v),35,y+3);ctx.strokeStyle='rgba(255,255,255,0.05)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(40,y);ctx.lineTo(canvas.width,y);ctx.stroke();}
-    months.forEach((m,i)=>{
-      const x=45+i*((canvas.width-55)/months.length);
-      const h=(monthly[m]/max)*130;
-      const y=145-h;
-      const g=ctx.createLinearGradient(x,y,x,145);
-      g.addColorStop(0,'#7c5cfc');g.addColorStop(1,'#f472b6');
-      ctx.fillStyle=g;
-      ctx.beginPath();
-      const r=4;
-      ctx.moveTo(x+r,y);ctx.lineTo(x+bw-r,y);ctx.quadraticCurveTo(x+bw,y,x+bw,y+r);ctx.lineTo(x+bw,145);ctx.lineTo(x,145);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);
-      ctx.fill();
-      ctx.fillStyle='#606078';ctx.font='10px Inter, sans-serif';ctx.textAlign='center';
-      ctx.fillText(new Date(m+'-01').toLocaleString('en',{month:'short'}),x+bw/2,162);
+    const bw=Math.min(36,(canvas.width-50)/months.length-10);
+    ctx.fillStyle='#8e8e93';ctx.font='11px -apple-system,sans-serif';ctx.textAlign='right';
+    for(let i=0;i<=3;i++){const v=max*(3-i)/3;const y=10+(110*i/3);ctx.fillText(fmt(v),35,y+3);ctx.strokeStyle='rgba(84,84,88,0.2)';ctx.lineWidth=0.5;ctx.beginPath();ctx.moveTo(40,y);ctx.lineTo(canvas.width,y);ctx.stroke()}
+    months.forEach((m,i)=>{const x=45+i*((canvas.width-50)/months.length);const h=(monthly[m]/max)*110;const y=120-h;
+      const g=ctx.createLinearGradient(x,y,x,120);g.addColorStop(0,'#0a84ff');g.addColorStop(1,'#bf5af2');ctx.fillStyle=g;
+      ctx.beginPath();const r=4;ctx.moveTo(x+r,y);ctx.lineTo(x+bw-r,y);ctx.quadraticCurveTo(x+bw,y,x+bw,y+r);ctx.lineTo(x+bw,120);ctx.lineTo(x,120);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.fill();
+      ctx.fillStyle='#8e8e93';ctx.font='11px -apple-system,sans-serif';ctx.textAlign='center';ctx.fillText(new Date(m+'-01').toLocaleString('en',{month:'short'}),x+bw/2,138);
     });
   }
+}
 
-  // Recent activity
-  const recent=[...ex].sort((a,b)=>(b.ts||0)-(a.ts||0)).slice(0,5);
-  const ra=document.getElementById('recentActivity');
-  if(!recent.length) {
-    ra.innerHTML='<div style="color:var(--text-3);font-size:13px;">No recent activity</div>';
-  } else {
-    ra.innerHTML=recent.map(e=>{
-      const c=getCat(e.category);
-      return `<div class="expense-card" style="margin-bottom:6px;">
-        <div class="expense-icon">${c.icon}</div>
-        <div class="expense-info"><div class="name">${e.description||c.label}</div><div class="meta">${fmtD(e.date)}</div></div>
-        <div class="expense-amount">${fmtF(e.amount)}</div>
-      </div>`;
-    }).join('');
+// ============ SUMMARY ============
+async function updateSummary(){
+  const[st,mf,sv,ex]=await Promise.all([getAll('stocks'),getAll('mutual_funds'),getAll('savings'),getAll('expenses')]);
+  const stI=st.reduce((s,x)=>s+x.qty*x.buyPrice,0),stC=st.reduce((s,x)=>s+x.qty*x.currentPrice,0);
+  const mfI=mf.reduce((s,x)=>s+x.units*x.buyNAV,0),mfC=mf.reduce((s,x)=>s+x.units*x.currentNAV,0);
+  const svT=sv.reduce((s,x)=>s+x.amount,0);
+  const nw=stC+mfC+svT;const pl=(stC-stI)+(mfC-mfI);
+  document.getElementById('pNetWorth').textContent=fmt(nw);
+  const up=pl>=0;
+  document.getElementById('pNetChange').textContent=`${up?'+':''}${fmt(pl)} all time P&L`;
+  document.getElementById('pNetChange').style.color=up?'var(--green)':'var(--red)';
+  document.getElementById('pNetSub').textContent=`Invested: ${fmt(stI+mfI+svT)}`;
+}
+
+// ============ MODALS ============
+function closeModal(id){document.getElementById(id).classList.remove('show')}
+document.querySelectorAll('.modal-bg').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('show')}));
+
+// ============ DELETE ============
+let delStore='',delId=null;
+function askDel(store,id,name){delStore=store;delId=id;document.getElementById('confirmTitle').textContent='Delete?';document.getElementById('confirmMsg').textContent=`"${name}" will be removed permanently.`;document.getElementById('confirmBg').classList.add('show')}
+function closeConfirm(){document.getElementById('confirmBg').classList.remove('show')}
+async function doConfirm(){if(delId){await delItem(delStore,delId);toast('Deleted');closeConfirm();await loadAll();updateSummary();syncSheets()}}
+
+// ============ BUDGET ============
+async function openBudgetModal(){document.getElementById('budgetInput').value=await getSetting('budget')||'';document.getElementById('budgetModal').classList.add('show')}
+async function saveBudget(){await setSetting('budget',parseFloat(document.getElementById('budgetInput').value)||0);closeModal('budgetModal');toast('Budget saved ✓');updateSummary();renderDash();document.getElementById('budgetVal').textContent=fmt(await getSetting('budget'))+'/mo'}
+
+// ============ EXPORT/IMPORT ============
+async function exportData(){const d={stocks:await getAll('stocks'),mutual_funds:await getAll('mutual_funds'),savings:await getAll('savings'),expenses:await getAll('expenses'),budget:await getSetting('budget'),ts:new Date().toISOString()};const b=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`investtrack_${new Date().toISOString().split('T')[0]}.json`;a.click();toast('Exported ✓')}
+async function handleImport(e){const f=e.target.files[0];if(!f)return;try{const d=JSON.parse(await f.text());if(d.stocks){await clearStore('stocks');for(const i of d.stocks)await putItem('stocks',i)}if(d.mutual_funds){await clearStore('mutual_funds');for(const i of d.mutual_funds)await putItem('mutual_funds',i)}if(d.savings){await clearStore('savings');for(const i of d.savings)await putItem('savings',i)}if(d.expenses){await clearStore('expenses');for(const i of d.expenses)await putItem('expenses',i)}if(d.budget)await setSetting('budget',d.budget);await loadAll();updateSummary();toast('Imported ✓')}catch{toast('Invalid file')}e.target.value=''}
+async function clearAll(){if(confirm('Delete ALL data permanently?')){await Promise.all(STORES.map(s=>clearStore(s)));await loadAll();updateSummary();toast('Cleared')}}
+
+// ============ GOOGLE SHEETS SYNC ============
+function toggleGsPanel(){const el=document.getElementById('gsSetup');el.style.display=el.style.display==='none'?'block':'none'}
+async function saveScriptUrl(){const url=document.getElementById('gScriptUrl').value.trim();if(!url)return toast('Paste URL');if(!url.includes('script.google.com'))return toast('Invalid URL');await setSetting('gScriptUrl',url);document.getElementById('gsSetupStatus').innerHTML='<span style="color:var(--green)">✅ Saved! Tap Test</span>';toast('URL saved ✓')}
+async function testConnection(){const url=await getSetting('gScriptUrl');if(!url)return toast('Save URL first');document.getElementById('gsSetupStatus').innerHTML='⏳ Testing...';try{const r=await fetch(url);const d=await r.json();if(d.status==='ok'){document.getElementById('syncDot').classList.remove('off');document.getElementById('syncDot').classList.add('syncing');document.getElementById('syncLabel').textContent='Sheets connected';document.getElementById('gsStatusText').textContent='✅ Connected';document.getElementById('gsSetupStatus').innerHTML='<span style="color:var(--green)">✅ Connected! Ready to sync.</span>';toast('Connected ✓')}else throw 0}catch(e){document.getElementById('gsSetupStatus').innerHTML='<span style="color:var(--red)">❌ Failed. Check URL & deployment.</span>'}}
+async function syncNow(){const url=await getSetting('gScriptUrl');if(!url)return toast('Setup sync first');await syncSheets()}
+async function syncSheets(){
+  const url=await getSetting('gScriptUrl');if(!url)return;
+  try{
+    const[st,mf,sv,ex]=await Promise.all([getAll('stocks'),getAll('mutual_funds'),getAll('savings'),getAll('expenses')]);
+    await fetch(url,{method:'POST',body:JSON.stringify({action:'sync',sheets:{stocks:st,mutual_funds:mf,savings:sv,expenses:ex}}),redirect:'follow'});
+    document.getElementById('syncDot').classList.remove('off');document.getElementById('syncLabel').textContent='Synced '+new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+  }catch{
+    try{const[st,mf,sv,ex]=await Promise.all([getAll('stocks'),getAll('mutual_funds'),getAll('savings'),getAll('expenses')]);await fetch(url,{method:'POST',mode:'no-cors',body:JSON.stringify({action:'sync',sheets:{stocks:st,mutual_funds:mf,savings:sv,expenses:ex}}),headers:{'Content-Type':'text/plain'}});document.getElementById('syncDot').classList.remove('off');document.getElementById('syncLabel').textContent='Synced '+new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}catch(e2){document.getElementById('syncLabel').textContent='Sync failed'}
   }
 }
 
-// ===========================
-// SUMMARY
-// ===========================
-async function updateSummary() {
-  const [st,mf,sv,ex]=await Promise.all([getAll('stocks'),getAll('mutual_funds'),getAll('savings'),getAll('expenses')]);
-  const stInv=st.reduce((s,x)=>s+x.qty*x.buyPrice,0), stCur=st.reduce((s,x)=>s+x.qty*x.currentPrice,0);
-  const mfInv=mf.reduce((s,x)=>s+x.units*x.buyNAV,0), mfCur=mf.reduce((s,x)=>s+x.units*x.currentNAV,0);
-  const svTot=sv.reduce((s,x)=>s+x.amount,0);
-  const stPL=stCur-stInv, mfPL=mfCur-mfInv;
-  const netWorth=stCur+mfCur+svTot;
-
-  document.getElementById('sNetWorth').textContent=fmt(netWorth);
-  document.getElementById('sNetWorthSub').textContent=fmt(stInv+mfInv)+' invested';
-  document.getElementById('sStocks').textContent=fmt(stCur);
-  document.getElementById('sStocksPL').textContent=`${stPL>=0?'+':''}${fmt(stPL)} P&L`;
-  document.getElementById('sStocksPL').style.color=stPL>=0?'var(--green)':'var(--red)';
-  document.getElementById('sMF').textContent=fmt(mfCur);
-  document.getElementById('sMFPL').textContent=`${mfPL>=0?'+':''}${fmt(mfPL)} P&L`;
-  document.getElementById('sMFPL').style.color=mfPL>=0?'var(--green)':'var(--red)';
-  document.getElementById('sSavings').textContent=fmt(svTot);
-  document.getElementById('sSavingsSub').textContent=`${sv.length} accounts`;
-
-  const now=new Date(), mo=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
-  const mExp=ex.filter(e=>(e.date||'').startsWith(mo)).reduce((s,e)=>s+e.amount,0);
-  document.getElementById('sMonthExp').textContent=fmt(mExp);
-
-  const budget=await getSetting('budget');
-  if(budget) {
-    const pct=((mExp/budget)*100).toFixed(0);
-    document.getElementById('sBudgetSub').textContent=`${pct}% of ${fmt(budget)}`;
-    document.getElementById('sBudgetSub').style.color=mExp>budget?'var(--red)':'var(--green)';
-    document.getElementById('budgetDesc').textContent=fmt(budget)+'/month';
-  }
+// ============ INIT ============
+async function loadAll(){await Promise.all([loadStocks(),loadMFs(),loadSavings(),loadExpenses()])}
+async function init(){
+  await openDB();renderCatGrid();
+  const url=await getSetting('gScriptUrl');
+  if(url){document.getElementById('gScriptUrl').value=url;try{const r=await fetch(url);const d=await r.json();if(d.status==='ok'){document.getElementById('syncDot').classList.remove('off');document.getElementById('syncLabel').textContent='Sheets connected'}}catch{}}
+  const b=await getSetting('budget');if(b)document.getElementById('budgetVal').textContent=fmt(b)+'/mo';
+  await loadAll();await updateSummary();await renderDash();
 }
-
-// ===========================
-// DELETE CONFIRM
-// ===========================
-let delStore='', delId=null;
-function askDel(store,id,name) {
-  delStore=store; delId=id;
-  document.getElementById('confirmMsg').textContent=`Delete "${name}"? This can't be undone.`;
-  document.getElementById('confirmBg').classList.add('show');
-}
-function closeConfirm() { document.getElementById('confirmBg').classList.remove('show'); }
-async function doConfirm() {
-  if(delId) { await delItem(delStore,delId); toast('Deleted'); closeConfirm(); await loadAll(); updateSummary(); syncSheets(); }
-}
-
-// ===========================
-// MODALS
-// ===========================
-function closeModal(id) { document.getElementById(id).classList.remove('show'); }
-document.querySelectorAll('.modal-bg').forEach(m=>m.addEventListener('click',e=>{ if(e.target===m) m.classList.remove('show'); }));
-
-// ===========================
-// BUDGET
-// ===========================
-async function openBudgetModal() {
-  document.getElementById('budgetInput').value = await getSetting('budget') || '';
-  document.getElementById('budgetModal').classList.add('show');
-}
-async function saveBudget() {
-  await setSetting('budget', parseFloat(document.getElementById('budgetInput').value)||0);
-  closeModal('budgetModal'); toast('Budget saved ✓'); updateSummary();
-}
-
-// ===========================
-// EXPORT / IMPORT
-// ===========================
-async function exportData() {
-  const data = {
-    stocks: await getAll('stocks'),
-    mutual_funds: await getAll('mutual_funds'),
-    savings: await getAll('savings'),
-    expenses: await getAll('expenses'),
-    budget: await getSetting('budget'),
-    exported: new Date().toISOString()
-  };
-  const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `investtrack_${new Date().toISOString().split('T')[0]}.json`;
-  a.click();
-  toast('Backup downloaded ✓');
-}
-
-async function handleImport(e) {
-  const f=e.target.files[0]; if(!f) return;
-  try {
-    const d=JSON.parse(await f.text());
-    if(d.stocks){await clearStore('stocks');for(const i of d.stocks)await putItem('stocks',i);}
-    if(d.mutual_funds){await clearStore('mutual_funds');for(const i of d.mutual_funds)await putItem('mutual_funds',i);}
-    if(d.savings){await clearStore('savings');for(const i of d.savings)await putItem('savings',i);}
-    if(d.expenses){await clearStore('expenses');for(const i of d.expenses)await putItem('expenses',i);}
-    if(d.budget) await setSetting('budget',d.budget);
-    await loadAll(); updateSummary(); toast('Data imported ✓');
-  } catch { toast('Invalid file'); }
-  e.target.value='';
-}
-
-async function clearAll() {
-  if(confirm('Delete ALL data permanently?')) {
-    await Promise.all(STORES.map(s=>clearStore(s)));
-    await loadAll(); updateSummary(); toast('All data cleared');
-  }
-}
-
-// ===========================
-// GOOGLE SHEETS SYNC (FREE via Apps Script)
-// ===========================
-let gConnected = false;
-
-function toggleGsPanel() {
-  const el = document.getElementById('gsSetup');
-  el.style.display = el.style.display === 'none' ? 'block' : 'none';
-}
-
-function showGsStatus(msg, type='info') {
-  const el = document.getElementById('gsSetupStatus');
-  el.textContent = msg;
-  el.className = `gs-status show ${type}`;
-}
-
-function copyScript() {
-  const code = document.getElementById('scriptCode').textContent;
-  navigator.clipboard.writeText(code).then(() => {
-    toast('Script copied ✓');
-  }).catch(() => {
-    // Fallback
-    const ta = document.createElement('textarea');
-    ta.value = code;
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
-    toast('Script copied ✓');
-  });
-}
-
-async function saveScriptUrl() {
-  const url = document.getElementById('gScriptUrl').value.trim();
-  if(!url) return toast('Paste the Web App URL');
-  if(!url.startsWith('https://script.google.com/')) {
-    return showGsStatus('❌ URL must start with https://script.google.com/', 'error');
-  }
-  await setSetting('gScriptUrl', url);
-  showGsStatus('✅ URL saved! Now tap "Test Connection"', 'success');
-  toast('URL saved ✓');
-}
-
-async function testConnection() {
-  const url = await getSetting('gScriptUrl');
-  if(!url) {
-    showGsStatus('❌ Please save the Web App URL first', 'error');
-    return;
-  }
-  
-  showGsStatus('🔄 Testing connection...', 'info');
-  
-  try {
-    const resp = await fetch(url, { method: 'GET' });
-    const data = await resp.json();
-    
-    if(data.status === 'ok') {
-      gConnected = true;
-      showGsStatus('✅ Connection successful! Your sheet is ready.', 'success');
-      document.getElementById('syncDot').classList.remove('offline');
-      document.getElementById('syncText').textContent = 'Google Sheets Ready';
-      document.getElementById('gsStatusText').textContent = '✅ Connected — tap Sync Now to push data';
-      toast('Connected to Google Sheets ✓');
-    } else {
-      showGsStatus('❌ Script responded with error: ' + (data.msg || 'Unknown'), 'error');
-    }
-  } catch(e) {
-    showGsStatus('❌ Connection failed. Make sure you deployed the script as "Web app" with access set to "Anyone". Error: ' + e.message, 'error');
-  }
-}
-
-async function syncNow() {
-  const url = await getSetting('gScriptUrl');
-  if(!url) {
-    toast('Setup Google Sheets sync first!');
-    return;
-  }
-  await syncSheets();
-}
-
-async function syncSheets() {
-  const url = await getSetting('gScriptUrl');
-  if(!url) return;
-
-  try {
-    const [st, mf, sv, ex] = await Promise.all([
-      getAll('stocks'), getAll('mutual_funds'), getAll('savings'), getAll('expenses')
-    ]);
-
-    const payload = {
-      action: 'sync',
-      sheets: {
-        stocks: st,
-        mutual_funds: mf,
-        savings: sv,
-        expenses: ex
-      }
-    };
-
-    // Google Apps Script requires no custom Content-Type header
-    // and handles redirect internally in browsers
-    const resp = await fetch(url, {
-      method: 'POST',
-      body: JSON.stringify(payload),
-      redirect: 'follow'
-    });
-
-    let data;
-    try {
-      data = await resp.json();
-    } catch(e) {
-      // If we can't parse response, assume it worked (common with Apps Script redirects)
-      data = { status: 'ok' };
-    }
-
-    if(data.status === 'ok') {
-      gConnected = true;
-      document.getElementById('syncDot').classList.remove('offline');
-      document.getElementById('syncText').textContent = 'Synced ' + new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
-      document.getElementById('gsStatusText').textContent = '✅ Last synced: ' + new Date().toLocaleString('en-IN');
-      toast('Synced to Google Sheets ✓');
-      console.log('✅ Synced to Google Sheets');
-    } else {
-      toast('Sync error: ' + (data.msg || 'Unknown'));
-    }
-  } catch(e) {
-    // If fetch fails (e.g., CORS/redirect issue), try no-cors mode
-    // Data will still be sent, we just can't read the response
-    try {
-      const [st, mf, sv, ex] = await Promise.all([
-        getAll('stocks'), getAll('mutual_funds'), getAll('savings'), getAll('expenses')
-      ]);
-
-      const payload = {
-        action: 'sync',
-        sheets: { stocks: st, mutual_funds: mf, savings: sv, expenses: ex }
-      };
-
-      await fetch(url, {
-        method: 'POST',
-        mode: 'no-cors',
-        body: JSON.stringify(payload),
-        headers: { 'Content-Type': 'text/plain' }
-      });
-
-      // no-cors always returns opaque response, assume success
-      gConnected = true;
-      document.getElementById('syncDot').classList.remove('offline');
-      document.getElementById('syncText').textContent = 'Synced ' + new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
-      document.getElementById('gsStatusText').textContent = '✅ Last synced: ' + new Date().toLocaleString('en-IN');
-      toast('Synced to Google Sheets ✓');
-    } catch(e2) {
-      console.error('Sync error:', e2);
-      document.getElementById('syncDot').classList.add('offline');
-      document.getElementById('syncText').textContent = 'Sync failed';
-      toast('Sync failed — check internet');
-    }
-  }
-}
-
-// ===========================
-// INIT
-// ===========================
-async function loadAll() {
-  await Promise.all([loadStocks(), loadMFs(), loadSavings(), loadExpenses()]);
-}
-
-async function init() {
-  await openDB();
-  renderCatGrid();
-
-  // Restore Google Apps Script URL (hardcoded from user's deployment)
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwDc6UrYznRtMUBj5raehYGPO1RwVyQaEFU_twlkgHCQh9AhjWuGD03JGMIq1tSVTtp/exec';
-  const savedUrl = await getSetting('gScriptUrl');
-  
-  // Always use the user's deployed script URL
-  if (!savedUrl) {
-    await setSetting('gScriptUrl', SCRIPT_URL);
-  }
-  document.getElementById('gScriptUrl').value = savedUrl || SCRIPT_URL;
-  
-  // Auto-test connection on load
-  try {
-    const resp = await fetch(savedUrl || SCRIPT_URL, { method: 'GET' });
-    const data = await resp.json();
-    if (data.status === 'ok') {
-      gConnected = true;
-      document.getElementById('syncDot').classList.remove('offline');
-      document.getElementById('syncText').textContent = 'Google Sheets Connected';
-      document.getElementById('gsStatusText').textContent = '✅ Connected — data auto-syncs on every change';
-    }
-  } catch(e) {
-    console.log('Sync not available offline');
-  }
-
-  await loadAll();
-  await updateSummary();
-  await renderDash();
-}
-
 init();
-
-// PWA
-if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
 </body>
 </html>
